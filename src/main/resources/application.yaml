@@ -1,0 +1,24 @@
+spring:
+  telegram:
+    oauth:
+      client-id: your-client-id
+      client-secret: your-client-secret
+      redirect-uri: https://your-app.com/login/oauth2/code/telegram
+
+  datasource:
+    url: jdbc:postgresql://192.168.1.166:5432/astor_butler
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    change-log: classpath:/db.changelog-master.yaml
+    enabled: true
