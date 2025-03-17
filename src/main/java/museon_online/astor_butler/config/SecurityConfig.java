@@ -27,13 +27,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/telegram/**").permitAll()
-
+                        .requestMatchers("/api/public/**", "/api/telegram/**").permitAll()
                         .requestMatchers("/api/user/**").hasRole("GUEST")
                         .requestMatchers("/api/manager/**").hasRole("MANAGER")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
@@ -49,9 +46,9 @@ public class SecurityConfig {
     public ClientRegistrationRepository clientRegistrationRepository() {
         return new InMemoryClientRegistrationRepository(
                 ClientRegistration.withRegistrationId("telegram")
-                        .clientId("your-client-id")
-                        .clientSecret("your-client-secret")
-                        .redirectUri("{baseUrl}/login/oauth2/code/telegram")
+                        .clientId(System.getenv("TELEGRAM_CLIENT_ID"))
+                        .clientSecret(System.getenv("TELEGRAM_CLIENT_SECRET"))
+                        .redirectUri(System.getenv("TELEGRAM_REDIRECT_URI"))
                         .authorizationUri("https://oauth.telegram.org/auth")
                         .tokenUri("https://oauth.telegram.org/token")
                         .userInfoUri("https://api.telegram.org/bot{token}/getMe")
@@ -62,5 +59,4 @@ public class SecurityConfig {
                         .build()
         );
     }
-
 }
