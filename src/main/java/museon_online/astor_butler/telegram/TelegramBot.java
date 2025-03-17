@@ -15,9 +15,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.List;
-
-import static museon_online.astor_butler.utils.TelegramUtils.getChatIdFromUpdate;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -27,6 +27,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final CommandRegistry commandRegistry;
     private final TelegramExceptionHandler exceptionHandler;
     private final String botToken;
+    private final Map<Long, BotState> userState = new HashMap<>();
 
     @Autowired
     private TelegramOAuthService telegramOAuthService;
@@ -56,25 +57,27 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasContact()) {
-            telegramOAuthService.processOAuthResponse(update);
-        } else {
-            try {
-                if (update.hasCallbackQuery()) {
-                    handleCallback(update);
-                } else if (update.hasMessage() && update.getMessage().hasText()) {
-                    handleCommand(update);
-                } else {
-                    log.debug("Игнорируемое обновление: {}", update);
-                }
-            } catch (Exception e) {
-                log.error("Ошибка в обработке команды: {}", e.getMessage(), e);
-                Long chatId = TelegramUtils.getChatIdFromUpdate(update);
-                if (chatId != null) {
-                    exceptionHandler.handleException(new TelegramApiException("Ошибка в обработке команды", e), this, chatId);
-                } else {
-                    log.warn("Не удалось определить chatId для отправки сообщения об ошибке.");
-                }
+        Long chatId = TelegramUtils.getChatIdFromUpdate(update);
+
+        if (chatId != null && userState.get(chatId) == BotState.WAITING_FOR_PHONE) {
+            telegramOAuthService.handlePhoneInput(update);
+            return;
+        }
+
+        try {
+            if (update.hasCallbackQuery()) {
+                handleCallback(update);
+            } else if (update.hasMessage() && update.getMessage().hasText()) {
+                handleCommand(update);
+            } else {
+                log.debug("Игнорируемое обновление: {}", update);
+            }
+        } catch (Exception e) {
+            log.error("Ошибка в обработке команды: {}", e.getMessage(), e);
+            if (chatId != null) {
+                exceptionHandler.handleException(new TelegramApiException("Ошибка в обработке команды", e), this, chatId);
+            } else {
+                log.warn("Не удалось определить chatId для отправки сообщения об ошибке.");
             }
         }
     }
@@ -117,22 +120,29 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void sendRequestPhoneMessage(Long chatId) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-        message.setText("Мы не смогли получить ваш номер телефона. Пожалуйста, введите его вручную, иначе мы будем вынуждены отправить вас в космос 🚀");
-
-        KeyboardButton requestPhoneButton = new KeyboardButton("📲 Поделиться номером");
-        requestPhoneButton.setRequestContact(true);
-
-        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
-        markup.setResizeKeyboard(true);
-        markup.setKeyboard(List.of(List.of(requestPhoneButton)));
-
-        message.setReplyMarkup(markup);
+        message.setText("Пожалуйста, введите ваш номер телефона в формате +1234567890:");
 
         try {
             execute(message);
+            userState.put(chatId, BotState.WAITING_FOR_PHONE);
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке запроса на номер телефона: {}", e.getMessage());
+            log.error("Ошибка при отправке запроса на номер: {}", e.getMessage(), e);
         }
     }
 
+    public Map<Long, BotState> getUserState() {
+        return userState;
+    }
+
+    public void sendTextMessage(Long chatId, String message) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(String.valueOf(chatId));
+        sendMessage.setText(message);
+
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            log.error("Ошибка при отправке сообщения: {}", e.getMessage(), e);
+        }
+    }
 }

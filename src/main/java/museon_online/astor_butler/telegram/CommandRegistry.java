@@ -1,6 +1,7 @@
 package museon_online.astor_butler.telegram;
 
 import museon_online.astor_butler.model.User;
+import museon_online.astor_butler.service.UserService;
 import museon_online.astor_butler.telegram.command.*;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 public class CommandRegistry {
 
     private final Map<String, BotCommand> commandMap;
+    private final UserService userService;
 
     public CommandRegistry(
             StartCommand startCommand,
@@ -22,9 +24,12 @@ public class CommandRegistry {
             FeedbackCommand feedbackCommand,
             OrderCommand orderCommand,
             RazjebCommand razjebCommand,
-            AfishaCommand afishaCommand
-    ) {
-        this.commandMap = Map.of(
+            AfishaCommand afishaCommand,
+            UserService userService) {
+
+        this.userService = userService;
+
+        commandMap = Map.of(
                 "/start", startCommand,
                 "/balance", balanceCommand,
                 "/menu", menuCommand,
@@ -38,10 +43,13 @@ public class CommandRegistry {
     }
 
     public String executeCommand(String command, Update update) {
-        User user = userService.findByTelegramId(update.getMessage().getFrom().getId());
+        User user = userService.findByTelegramId(update.getMessage().getFrom().getId().toString());
+        if (user == null) {
+            throw new RuntimeException("Пользователь не найден");
+        }
 
         if (user.isRequiresPhone()) {
-            return "🚫 У вас нет доступа к этой команде, пока вы не введёте номер телефона.";
+            return "🚫 У вас нет доступа к этой команде.";
         }
 
         BotCommand botCommand = commandMap.get(command);

@@ -2,8 +2,10 @@ package museon_online.astor_butler.service;
 
 import lombok.RequiredArgsConstructor;
 import museon_online.astor_butler.model.User;
+import museon_online.astor_butler.telegram.BotState;
 import museon_online.astor_butler.telegram.TelegramBot;
 import museon_online.astor_butler.telegram.exception.TelegramExceptionHandler;
+import museon_online.astor_butler.utils.TelegramUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -15,24 +17,23 @@ public class TelegramOAuthService {
     private final TelegramExceptionHandler exceptionHandler;
     private final TelegramBot telegramBot;
 
-    public void processOAuthResponse(Update update) {
-        String telegramId = update.getMessage().getFrom().getId().toString();
+    public void handlePhoneInput(Update update) {
+        Long chatId = TelegramUtils.getChatIdFromUpdate(update);
+        String phoneNumber = update.getMessage().getText();
 
-        User user = userService.getUserByTelegramId(telegramId);
+        if (isValidPhoneNumber(phoneNumber)) {
+            User user = userService.findByTelegramId(update.getMessage().getFrom().getId().toString());
+            user.setPhoneNumber(phoneNumber);
+            userService.save(user);
 
-        if (user == null) {
-            user = new User();
-            user.setTelegramId(telegramId);
-            user.setFirstName(update.getMessage().getFrom().getFirstName());
-            user.setLastName(update.getMessage().getFrom().getLastName());
-            user.setUsername(update.getMessage().getFrom().getUserName());
-
-            user.setRequiresPhone(true);
-            userService.createUser(user);
+            telegramBot.sendTextMessage(chatId, "✅ Номер телефона успешно сохранён!");
+            telegramBot.getUserState().put(chatId, BotState.READY);
+        } else {
+            telegramBot.sendTextMessage(chatId, "❌ Неверный формат номера. Попробуйте ещё раз.");
         }
+    }
 
-        if (user.isRequiresPhone()) {
-            telegramBot.sendRequestPhoneMessage(update.getMessage().getChatId());
-        }
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        return phoneNumber != null && phoneNumber.matches("^\\+?[0-9]{7,15}$");
     }
 }

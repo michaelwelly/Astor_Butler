@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,9 +21,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserByTelegramId(String telegramId) {
+    public User findByTelegramId(String telegramId) {
         return userRepository.findByTelegramId(telegramId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
     }
 
     public User getUserById(UUID id) {
@@ -58,6 +59,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User save(User user) {
+        return userRepository.save(user);
+    }
 
     public User updateUser(UUID id, User updatedUser) {
         User user = getUserById(id);
