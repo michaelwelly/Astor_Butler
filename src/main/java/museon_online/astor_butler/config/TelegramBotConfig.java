@@ -7,11 +7,12 @@ import museon_online.astor_butler.telegram.exception.TelegramExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 
 @Configuration
 public class TelegramBotConfig {
 
-    @Value("${telegram.oauth.client-secret}")
+    @Value("${TELEGRAM_BOT_TOKEN}")
     private String botToken;
 
     private final CommandRegistry commandRegistry;
@@ -23,10 +24,14 @@ public class TelegramBotConfig {
     }
 
     @Bean
+    public DefaultBotOptions defaultBotOptions() {
+        return new DefaultBotOptions();
+    }
+
+    @Bean
     public TelegramBot telegramBot() {
         return new TelegramBot(commandRegistry, exceptionHandler, botToken);
     }
-
     @Bean
     public MenuButton menuButton() {
         return new MenuButton();
@@ -66,7 +71,5 @@ public class TelegramBotConfig {
     public AfishaButton afishaButton() {
         return new AfishaButton();
     }
-
-
 
 }
