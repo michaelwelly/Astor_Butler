@@ -1,5 +1,6 @@
 package museon_online.astor_butler.telegram;
 
+import museon_online.astor_butler.model.User;
 import museon_online.astor_butler.telegram.command.*;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,12 @@ public class CommandRegistry {
     }
 
     public String executeCommand(String command, Update update) {
+        User user = userService.findByTelegramId(update.getMessage().getFrom().getId());
+
+        if (user.isRequiresPhone()) {
+            return "🚫 У вас нет доступа к этой команде, пока вы не введёте номер телефона.";
+        }
+
         BotCommand botCommand = commandMap.get(command);
         if (botCommand != null) {
             return botCommand.execute(update);
@@ -44,5 +51,6 @@ public class CommandRegistry {
             return "Неизвестная команда 🤷‍♂️";
         }
     }
+
 }
 

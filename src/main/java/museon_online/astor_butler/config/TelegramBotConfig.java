@@ -1,5 +1,8 @@
 package museon_online.astor_butler.config;
 
+import lombok.RequiredArgsConstructor;
+import museon_online.astor_butler.service.TelegramOAuthService;
+import museon_online.astor_butler.service.UserService;
 import museon_online.astor_butler.telegram.TelegramBot;
 import museon_online.astor_butler.telegram.CommandRegistry;
 import museon_online.astor_butler.telegram.button.*;
@@ -10,17 +13,24 @@ import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 
 @Configuration
+@RequiredArgsConstructor
 public class TelegramBotConfig {
 
     @Value("${TELEGRAM_BOT_TOKEN}")
     private String botToken;
-
     private final CommandRegistry commandRegistry;
     private final TelegramExceptionHandler exceptionHandler;
 
-    public TelegramBotConfig(CommandRegistry commandRegistry, TelegramExceptionHandler exceptionHandler) {
-        this.commandRegistry = commandRegistry;
-        this.exceptionHandler = exceptionHandler;
+    @Bean
+    public TelegramBot telegramBot() {
+        TelegramBot bot = new TelegramBot(commandRegistry, exceptionHandler, botToken);
+        exceptionHandler.setBot(bot);
+        return bot;
+    }
+
+    @Bean
+    public TelegramOAuthService telegramOAuthService(UserService userService, TelegramExceptionHandler exceptionHandler, TelegramBot telegramBot) {
+        return new TelegramOAuthService(userService, exceptionHandler, telegramBot);
     }
 
     @Bean
@@ -28,10 +38,6 @@ public class TelegramBotConfig {
         return new DefaultBotOptions();
     }
 
-    @Bean
-    public TelegramBot telegramBot() {
-        return new TelegramBot(commandRegistry, exceptionHandler, botToken);
-    }
     @Bean
     public MenuButton menuButton() {
         return new MenuButton();

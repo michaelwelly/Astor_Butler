@@ -20,6 +20,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserByTelegramId(String telegramId) {
+        return userRepository.findByTelegramId(telegramId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
     public User getUserById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));

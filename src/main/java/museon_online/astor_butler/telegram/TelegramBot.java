@@ -1,13 +1,21 @@
 package museon_online.astor_butler.telegram;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import museon_online.astor_butler.service.TelegramOAuthService;
 import museon_online.astor_butler.telegram.exception.TelegramExceptionHandler;
+import museon_online.astor_butler.utils.TelegramUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.List;
 
 import static museon_online.astor_butler.utils.TelegramUtils.getChatIdFromUpdate;
 
@@ -20,12 +28,20 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final TelegramExceptionHandler exceptionHandler;
     private final String botToken;
 
+    @Autowired
+    private TelegramOAuthService telegramOAuthService;
+
     public TelegramBot(CommandRegistry commandRegistry,
                        TelegramExceptionHandler exceptionHandler,
                        @Value("${telegram.bot.token}") String botToken) {
         this.commandRegistry = commandRegistry;
         this.exceptionHandler = exceptionHandler;
         this.botToken = botToken;
+    }
+
+    @PostConstruct
+    public void init() {
+        exceptionHandler.setBot(this);
     }
 
     @Override
@@ -40,21 +56,25 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        try {
-            if (update.hasCallbackQuery()) {
-                handleCallback(update);
-            } else if (update.hasMessage() && update.getMessage().hasText()) {
-                handleCommand(update);
-            } else {
-                log.debug("Игнорируемое обновление: {}", update);
-            }
-        } catch (Exception e) {
-            log.error("Ошибка в обработке команды: {}", e.getMessage(), e);
-            Long chatId = getChatIdFromUpdate(update);
-            if (chatId != null) {
-                exceptionHandler.handleException(new TelegramApiException("Ошибка в обработке команды", e), this, chatId);
-            } else {
-                log.warn("Не удалось определить chatId для отправки сообщения об ошибке.");
+        if (update.hasMessage() && update.getMessage().hasContact()) {
+            telegramOAuthService.processOAuthResponse(update);
+        } else {
+            try {
+                if (update.hasCallbackQuery()) {
+                    handleCallback(update);
+                } else if (update.hasMessage() && update.getMessage().hasText()) {
+                    handleCommand(update);
+                } else {
+                    log.debug("Игнорируемое обновление: {}", update);
+                }
+            } catch (Exception e) {
+                log.error("Ошибка в обработке команды: {}", e.getMessage(), e);
+                Long chatId = TelegramUtils.getChatIdFromUpdate(update);
+                if (chatId != null) {
+                    exceptionHandler.handleException(new TelegramApiException("Ошибка в обработке команды", e), this, chatId);
+                } else {
+                    log.warn("Не удалось определить chatId для отправки сообщения об ошибке.");
+                }
             }
         }
     }
@@ -93,4 +113,26 @@ public class TelegramBot extends TelegramLongPollingBot {
             exceptionHandler.handleException(e,this, chatId);
         }
     }
+
+    public void sendRequestPhoneMessage(Long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText("Мы не смогли получить ваш номер телефона. Пожалуйста, введите его вручную, иначе мы будем вынуждены отправить вас в космос 🚀");
+
+        KeyboardButton requestPhoneButton = new KeyboardButton("📲 Поделиться номером");
+        requestPhoneButton.setRequestContact(true);
+
+        ReplyKeyboardMarkup markup = new ReplyKeyboardMarkup();
+        markup.setResizeKeyboard(true);
+        markup.setKeyboard(List.of(List.of(requestPhoneButton)));
+
+        message.setReplyMarkup(markup);
+
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            log.error("Ошибка при отправке запроса на номер телефона: {}", e.getMessage());
+        }
+    }
+
 }

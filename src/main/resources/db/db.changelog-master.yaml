@@ -1,39 +1,9 @@
 databaseChangeLog:
-  - changeSet:
-      id: 1
-      author: astor-butler
-      changes:
-        - createTable:
-            tableName: user
-            columns:
-              - column:
-                  name: id
-                  type: UUID
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: telegram_id
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: first_name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: last_name
-                  type: VARCHAR(255)
-              - column:
-                  name: username
-                  type: VARCHAR(255)
-              - column:
-                  name: phone_number
-                  type: VARCHAR(255)
+  - include:
+      file: db/changelog/create_user_table.yaml
 
-  - changeSet:
+
+      - changeSet:
       id: 2
       author: astor-butler
       changes:
