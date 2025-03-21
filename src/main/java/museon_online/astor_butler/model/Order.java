@@ -14,7 +14,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,6 +39,5 @@ public class Order {
 
     @Column(nullable = false)
     private BigDecimal starsAmount;
-
 
 }

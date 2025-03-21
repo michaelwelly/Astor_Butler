@@ -11,12 +11,14 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-boot.version>3.2.5</spring-boot.version>
-		<postgresql.version>42.7.1</postgresql.version> <!-- Обновили версию -->
+		<postgresql.version>42.7.1</postgresql.version>
 		<lombok.version>1.18.28</lombok.version>
-		<liquibase-core.version>4.23.0</liquibase-core.version> <!-- Обновили версию -->
+		<liquibase-core.version>4.23.0</liquibase-core.version>
 		<redis.version>3.0.6</redis.version>
-		<kafka.version>3.1.2</kafka.version> <!-- Обновили версию -->
-		<netty.version>4.1.108.Final</netty.version> <!-- Исправляем уязвимость -->
+		<kafka.version>3.1.2</kafka.version>
+		<netty.version>4.1.108.Final</netty.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencyManagement>
@@ -135,6 +137,12 @@
 			<version>3.1.8</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -152,6 +160,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.2.5</version>
 			</plugin>
 
 			<plugin>

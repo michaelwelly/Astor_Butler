@@ -1,6 +1,7 @@
 package museon_online.astor_butler.controller;
 
 import lombok.RequiredArgsConstructor;
+import museon_online.astor_butler.model.Role;
 import museon_online.astor_butler.model.User;
 import museon_online.astor_butler.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;

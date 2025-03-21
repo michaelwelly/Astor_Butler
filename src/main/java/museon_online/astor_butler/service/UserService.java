@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import museon_online.astor_butler.model.Role;
 import museon_online.astor_butler.model.User;
 import museon_online.astor_butler.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,6 +16,8 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    @Value("${app.owner.telegram-id}")
+    private String ownerTelegramId;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -31,25 +33,32 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public User assignRole(UUID userId, Role role) {
-        if (role == Role.ROLE_ADMIN) {
-            throw new UnsupportedOperationException("Cannot assign ROLE_ADMIN through API");
-        }
         User user = getUserById(userId);
+
+        if (!user.getTelegramId().equals(ownerTelegramId)) {
+            throw new SecurityException("Вы не можете менять роли пользователей");
+        }
+
+        if (role == Role.ROLE_ADMIN) {
+            throw new UnsupportedOperationException("Роль ROLE_ADMIN недоступна для изменения");
+        }
+
         user.setRole(role);
         return userRepository.save(user);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public User assignManagerRole(UUID userId) {
         User user = getUserById(userId);
+
+        if (!user.getTelegramId().equals(ownerTelegramId)) {
+            throw new SecurityException("Вы не можете назначить роль менеджера");
+        }
+
         user.setRole(Role.ROLE_MANAGER);
         return userRepository.save(user);
     }
 
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public User createUser(User user) {
         if (user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
             throw new RuntimeException("Phone number is required");

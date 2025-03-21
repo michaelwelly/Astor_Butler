@@ -16,9 +16,8 @@ import java.util.List;
 import static museon_online.astor_butler.utils.TelegramUtils.getChatIdFromUpdate;
 
 @Slf4j
-@RequiredArgsConstructor
 @TelegramCommand("/start")
-@Component
+@RequiredArgsConstructor
 public class StartCommand implements BotCommand {
 
     private final MainMenuCommand mainMenuCommand;

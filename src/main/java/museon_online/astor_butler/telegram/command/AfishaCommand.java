@@ -1,12 +1,13 @@
 package museon_online.astor_butler.telegram.command;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import museon_online.astor_butler.telegram.handler.AfishaHandler;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+
+@Slf4j
 @TelegramCommand("/afisha")
-@Component
 @RequiredArgsConstructor
 public class AfishaCommand implements BotCommand {
 

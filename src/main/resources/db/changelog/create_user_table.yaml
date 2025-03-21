@@ -1,7 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 001-create_user_table
       author: astor-butler
+      preConditions:
+        - not:
+            tableExists:
+              tableName: user
       changes:
         - createTable:
             tableName: user
@@ -47,8 +51,8 @@ databaseChangeLog:
                     nullable: false
                     defaultValue: 0
               - column:
-                  name: role
-                  type: VARCHAR(50)
+                  name: role_id
+                  type: UUID
                   constraints:
                     nullable: false
               - column:

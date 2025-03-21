@@ -1,8 +1,10 @@
 package museon_online.astor_butler.telegram.command;
 
+import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @TelegramCommand("/feedback")
+@RequiredArgsConstructor
 public class FeedbackCommand implements BotCommand {
 
     @Override

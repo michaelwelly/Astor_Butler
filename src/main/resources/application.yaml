@@ -22,5 +22,5 @@ spring:
         format_sql: true
 
   liquibase:
-    change-log: classpath:/db.changelog-master.yaml
-    enabled: true
+      change-log: ${LIQUIBASE_CHANGELOG}
+      enabled: true

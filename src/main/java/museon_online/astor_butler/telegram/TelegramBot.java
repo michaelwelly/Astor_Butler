@@ -11,11 +11,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -107,12 +104,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(String.valueOf(chatId));
         sendMessage.setText(message);
+        sendMessage.enableMarkdown(true);
 
         try {
             execute(sendMessage);
             log.debug("Сообщение отправлено в чат {}: {}", chatId, message);
         } catch (TelegramApiException e) {
-            log.error("Ошибка при отправке сообщения: {}", e.getMessage());
+            log.error("Ошибка при отправке сообщения в чат {}: {}", chatId, message, e);
             exceptionHandler.handleException(e,this, chatId);
         }
     }
