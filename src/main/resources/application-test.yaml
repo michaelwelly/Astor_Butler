@@ -1,10 +1,9 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
+    url: jdbc:postgresql://localhost:5432/astor_test
+    username: testuser
+    password: testpassword
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,6 +11,5 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-
   liquibase:
-    enabled: false
+    enabled: true
