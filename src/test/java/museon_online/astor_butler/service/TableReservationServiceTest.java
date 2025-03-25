@@ -1,8 +1,9 @@
 package museon_online.astor_butler.service;
 
-import museon_online.astor_butler.model.TableReservationOrder;
-import museon_online.astor_butler.model.ReservationStatus;
-import museon_online.astor_butler.repository.TableReservationOrderRepository;
+import museon_online.astor_butler.table.TableReservationOrder;
+import museon_online.astor_butler.table.ReservationStatus;
+import museon_online.astor_butler.table.TableReservationOrderRepository;
+import museon_online.astor_butler.table.TableReservationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

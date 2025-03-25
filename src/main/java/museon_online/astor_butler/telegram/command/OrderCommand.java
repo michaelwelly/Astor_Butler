@@ -1,11 +1,16 @@
 package museon_online.astor_butler.telegram.command;
 
 import lombok.RequiredArgsConstructor;
+import museon_online.astor_butler.telegram.utils.TelegramBot;
+import museon_online.astor_butler.telegram.button.OrderButton;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @TelegramCommand("/order")
 @RequiredArgsConstructor
 public class OrderCommand implements BotCommand {
+
+    private final TelegramBot telegramBot;
+    private final OrderButton orderButton;
 
     @Override
     public String getCommand() {
@@ -13,7 +18,13 @@ public class OrderCommand implements BotCommand {
     }
 
     @Override
-    public String execute(Update update) {
-        return "Для оформления заказа используйте команду в формате:\n/order [название] [кол-во] 🌟";
+    public String getDescription() {
+        return "Оформить заказ (стол, мерч, благотворительность)";
+    }
+
+    @Override
+    public void execute(Update update) {
+        Long chatId = update.getMessage().getChatId();
+        telegramBot.sendMessage(chatId, "Выберите тип заказа:", orderButton.createOrderButton());
     }
 }

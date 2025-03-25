@@ -1,10 +1,9 @@
 package museon_online.astor_butler.config;
 
 import lombok.RequiredArgsConstructor;
-import museon_online.astor_butler.service.TelegramOAuthService;
-import museon_online.astor_butler.service.UserService;
-import museon_online.astor_butler.telegram.TelegramBot;
-import museon_online.astor_butler.telegram.CommandRegistry;
+import museon_online.astor_butler.user.UserService;
+import museon_online.astor_butler.telegram.utils.TelegramBot;
+import museon_online.astor_butler.telegram.command.CommandRegistry;
 import museon_online.astor_butler.telegram.button.*;
 import museon_online.astor_butler.telegram.exception.TelegramExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;

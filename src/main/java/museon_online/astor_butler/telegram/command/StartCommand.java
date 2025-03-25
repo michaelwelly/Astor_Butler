@@ -2,18 +2,17 @@ package museon_online.astor_butler.telegram.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import museon_online.astor_butler.telegram.TelegramBot;
+import museon_online.astor_butler.telegram.utils.TelegramBot;
 import museon_online.astor_butler.telegram.exception.TelegramExceptionHandler;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 import java.util.List;
 
-import static museon_online.astor_butler.utils.TelegramUtils.getChatIdFromUpdate;
+import static museon_online.astor_butler.telegram.utils.TelegramUtils.getChatIdFromUpdate;
 
 @Slf4j
 @TelegramCommand("/start")

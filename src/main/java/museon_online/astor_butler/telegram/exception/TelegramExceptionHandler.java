@@ -2,7 +2,7 @@ package museon_online.astor_butler.telegram.exception;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import museon_online.astor_butler.telegram.TelegramBot;
+import museon_online.astor_butler.telegram.utils.TelegramBot;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
