@@ -47,7 +47,7 @@ public class TableReservationController {
 
     // ✅ Получение бронирований по статусу
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<TableReservationOrder>> getReservationsByStatus(@PathVariable ReservationStatus status) {
+    public ResponseEntity<List<TableReservationOrder>> getReservationsByStatus(@PathVariable TableReservationStatus status) {
         List<TableReservationOrder> reservations = reservationService.getReservationsByStatus(status);
         return ResponseEntity.ok(reservations);
     }
@@ -56,7 +56,7 @@ public class TableReservationController {
     @GetMapping("/user/{userId}/status/{status}")
     public ResponseEntity<List<TableReservationOrder>> getReservationsByUserAndStatus(
             @PathVariable UUID userId,
-            @PathVariable ReservationStatus status) {
+            @PathVariable TableReservationStatus status) {
         List<TableReservationOrder> reservations = reservationService.getReservationsByUserAndStatus(userId, status);
         return ResponseEntity.ok(reservations);
     }

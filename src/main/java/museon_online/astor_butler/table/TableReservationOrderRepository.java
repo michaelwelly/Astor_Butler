@@ -11,9 +11,9 @@ import java.util.UUID;
 @Repository
 public interface TableReservationOrderRepository extends JpaRepository<TableReservationOrder, UUID> {
 
-    List<TableReservationOrder> findByStatus(ReservationStatus status);
+    List<TableReservationOrder> findByStatus(TableReservationStatus status);
 
-    List<TableReservationOrder> findByUserIdAndStatus(UUID userId, ReservationStatus status);
+    List<TableReservationOrder> findByUserIdAndStatus(UUID userId, TableReservationStatus status);
 
 
     boolean existsByTableNumberAndReservationDateAndReservationTimeBetween(

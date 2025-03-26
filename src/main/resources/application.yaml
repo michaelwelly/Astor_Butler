@@ -2,7 +2,6 @@ spring:
   telegram:
     oauth:
       client-id: ${TELEGRAM_CLIENT_ID}
-      client-secret: ${TELEGRAM_CLIENT_SECRET}
       redirect-uri: ${TELEGRAM_REDIRECT_URI}
   bot:
     token: ${TELEGRAM_BOT_TOKEN}

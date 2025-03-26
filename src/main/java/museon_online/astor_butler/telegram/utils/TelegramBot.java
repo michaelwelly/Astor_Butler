@@ -2,6 +2,7 @@ package museon_online.astor_butler.telegram.utils;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
 import museon_online.astor_butler.config.TelegramOAuthService;
 import museon_online.astor_butler.telegram.state.BotState;
 import museon_online.astor_butler.telegram.command.CommandRegistry;
@@ -13,13 +14,19 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Component
 @SuppressWarnings("deprecation")
+@Getter
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final CommandRegistry commandRegistry;
@@ -53,9 +60,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         return botToken;
     }
 
-    public Map<Long, BotState> getUserState() {
-        return userState;
-    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -121,15 +125,28 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     public void sendRequestPhoneMessage(Long chatId) {
+        KeyboardButton phoneButton = new KeyboardButton("📱 Отправить номер");
+        phoneButton.setRequestContact(true);
+
+        KeyboardRow row = new KeyboardRow();
+        row.add(phoneButton);
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(List.of(row));
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(true);
+
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-        message.setText("Пожалуйста, введите ваш номер телефона в формате +1234567890:");
+        message.setText("Пожалуйста, отправьте свой номер телефона:");
+        message.setReplyMarkup(keyboardMarkup);
 
         try {
             execute(message);
             userState.put(chatId, BotState.WAITING_FOR_PHONE);
         } catch (TelegramApiException e) {
             log.error("Ошибка при отправке запроса на номер: {}", e.getMessage(), e);
+            exceptionHandler.handleException(e, this, chatId);
         }
     }
 

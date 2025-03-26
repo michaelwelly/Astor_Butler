@@ -1,7 +1,7 @@
 package museon_online.astor_butler.service;
 
 import museon_online.astor_butler.table.TableReservationOrder;
-import museon_online.astor_butler.table.ReservationStatus;
+import museon_online.astor_butler.table.TableReservationStatus;
 import museon_online.astor_butler.table.TableReservationOrderRepository;
 import museon_online.astor_butler.table.TableReservationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class TableReservationServiceTest {
                 .id(reservationId)
                 .user(null) // мок на User можно добавить позже
                 .reservationTime(startTime)
-                .status(ReservationStatus.PENDING)
+                .status(TableReservationStatus.PENDING)
                 .amount(new BigDecimal("100.00"))
                 .numberOfPeople(2)
                 .tableNumber("T1")
@@ -85,7 +85,7 @@ class TableReservationServiceTest {
         UUID id = reservationService.createReservation(reservation);
 
         assertThat(id).isEqualTo(reservation.getId());
-        assertThat(reservation.getStatus()).isEqualTo(ReservationStatus.PENDING);
+        assertThat(reservation.getStatus()).isEqualTo(TableReservationStatus.PENDING);
         verify(reservationOrderRepository).save(reservation);
     }
 
@@ -109,7 +109,7 @@ class TableReservationServiceTest {
 
         TableReservationOrder confirmed = reservationService.confirmReservation(reservationId);
 
-        assertThat(confirmed.getStatus()).isEqualTo(ReservationStatus.CONFIRMED);
+        assertThat(confirmed.getStatus()).isEqualTo(TableReservationStatus.CONFIRMED);
         verify(reservationOrderRepository).save(reservation);
     }
 
@@ -131,7 +131,7 @@ class TableReservationServiceTest {
 
         TableReservationOrder cancelled = reservationService.cancelReservation(reservationId);
 
-        assertThat(cancelled.getStatus()).isEqualTo(ReservationStatus.CANCELED);
+        assertThat(cancelled.getStatus()).isEqualTo(TableReservationStatus.CANCELED);
         verify(reservationOrderRepository).save(reservation);
     }
 
@@ -148,10 +148,10 @@ class TableReservationServiceTest {
 
     @Test
     void testGetReservationsByStatus_ShouldReturnListOfReservations() {
-        when(reservationOrderRepository.findByStatus(ReservationStatus.PENDING))
+        when(reservationOrderRepository.findByStatus(TableReservationStatus.PENDING))
                 .thenReturn(List.of(reservation));
 
-        List<TableReservationOrder> result = reservationService.getReservationsByStatus(ReservationStatus.PENDING);
+        List<TableReservationOrder> result = reservationService.getReservationsByStatus(TableReservationStatus.PENDING);
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getId()).isEqualTo(reservation.getId());
@@ -159,11 +159,11 @@ class TableReservationServiceTest {
 
     @Test
     void testGetReservationsByUserAndStatus_ShouldReturnListOfReservations() {
-        when(reservationOrderRepository.findByUserIdAndStatus(userId, ReservationStatus.PENDING))
+        when(reservationOrderRepository.findByUserIdAndStatus(userId, TableReservationStatus.PENDING))
                 .thenReturn(List.of(reservation));
 
         List<TableReservationOrder> result =
-                reservationService.getReservationsByUserAndStatus(userId, ReservationStatus.PENDING);
+                reservationService.getReservationsByUserAndStatus(userId, TableReservationStatus.PENDING);
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getId()).isEqualTo(reservation.getId());

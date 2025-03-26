@@ -6,11 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -42,21 +37,4 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(
-                ClientRegistration.withRegistrationId("telegram")
-                        .clientId(System.getenv("TELEGRAM_CLIENT_ID"))
-                        .clientSecret(System.getenv("TELEGRAM_CLIENT_SECRET"))
-                        .redirectUri(System.getenv("TELEGRAM_REDIRECT_URI"))
-                        .authorizationUri("https://oauth.telegram.org/auth")
-                        .tokenUri("https://oauth.telegram.org/token")
-                        .userInfoUri("https://api.telegram.org/bot{token}/getMe")
-                        .userNameAttributeName("id")
-                        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-                        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                        .scope("read", "write")
-                        .build()
-        );
-    }
 }

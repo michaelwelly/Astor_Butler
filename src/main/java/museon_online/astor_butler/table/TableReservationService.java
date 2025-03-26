@@ -26,7 +26,7 @@ public class TableReservationService {
         if (!isTableAvailable(order.getTableNumber(), order.getStartTime(), order.getEndTime())) {
             throw new IllegalStateException("Table is not available");
         }
-        order.setStatus(ReservationStatus.PENDING);
+        order.setStatus(TableReservationStatus.PENDING);
         TableReservationOrder savedOrder = reservationOrderRepository.save(order);
 
         return savedOrder.getId();
@@ -41,7 +41,7 @@ public class TableReservationService {
     public TableReservationOrder confirmReservation(UUID id) {
         TableReservationOrder order = reservationOrderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found with id: " + id));
-        order.setStatus(ReservationStatus.CONFIRMED);
+        order.setStatus(TableReservationStatus.CONFIRMED);
         return reservationOrderRepository.save(order);
     }
 
@@ -49,17 +49,17 @@ public class TableReservationService {
     public TableReservationOrder cancelReservation(UUID id) {
         TableReservationOrder order = reservationOrderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Reservation not found with id: " + id));
-        order.setStatus(ReservationStatus.CANCELED);
+        order.setStatus(TableReservationStatus.CANCELED);
         return reservationOrderRepository.save(order);
     }
 
     @Transactional(readOnly = true)
-    public List<TableReservationOrder> getReservationsByStatus(ReservationStatus status) {
+    public List<TableReservationOrder> getReservationsByStatus(TableReservationStatus status) {
         return reservationOrderRepository.findByStatus(status);
     }
 
     @Transactional(readOnly = true)
-    public List<TableReservationOrder> getReservationsByUserAndStatus(UUID userId, ReservationStatus status) {
+    public List<TableReservationOrder> getReservationsByUserAndStatus(UUID userId, TableReservationStatus status) {
         return reservationOrderRepository.findByUserIdAndStatus(userId, status);
     }
 

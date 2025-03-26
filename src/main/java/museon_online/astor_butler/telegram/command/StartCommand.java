@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-
 import java.util.List;
 
 import static museon_online.astor_butler.telegram.utils.TelegramUtils.getChatIdFromUpdate;
@@ -19,9 +18,9 @@ import static museon_online.astor_butler.telegram.utils.TelegramUtils.getChatIdF
 @RequiredArgsConstructor
 public class StartCommand implements BotCommand {
 
-    private final MainMenuCommand mainMenuCommand;
     private final TelegramExceptionHandler exceptionHandler;
     private final TelegramBot telegramBot;
+    private final MainMenuCommand mainMenuCommand;
 
     @Override
     public String getCommand() {
@@ -29,7 +28,12 @@ public class StartCommand implements BotCommand {
     }
 
     @Override
-    public String execute(Update update) {
+    public String getDescription() {
+        return "Команда для начала работы с ботом.";
+    }
+
+    @Override
+    public void execute(Update update) {
         try {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
             InlineKeyboardButton loginButton = new InlineKeyboardButton("Войти через Telegram");
@@ -37,7 +41,13 @@ public class StartCommand implements BotCommand {
 
             markup.setKeyboard(List.of(List.of(loginButton)));
 
-            return "Привет! Для продолжения авторизуйся через Telegram 👇";
+            Long chatId = getChatIdFromUpdate(update);
+            telegramBot.sendMessageWithMarkup(chatId,
+                    "Привет! Для продолжения авторизуйся через Telegram 👇\n" +
+                    "Если не хочешь авторизовываться — отправляюсь на Луну! 🚀🌕",
+                    markup);
+
+            mainMenuCommand.execute(update);
         } catch (Exception e) {
             log.error("Ошибка при выполнении команды /start: {}", e.getMessage(), e);
             Long chatId = getChatIdFromUpdate(update);
@@ -50,21 +60,6 @@ public class StartCommand implements BotCommand {
             } else {
                 log.warn("Не удалось определить chatId для отправки сообщения об ошибке.");
             }
-
-            return "Что-то пошло не так... Отправляю тебя на Луну! 🚀🌕";
-        }
-    }
-
-    public String onAuthorizationComplete(Update update) {
-        try {
-            return mainMenuCommand.execute(update);
-        } catch (Exception e) {
-            Long chatId = getChatIdFromUpdate(update);
-            if (chatId != null) {
-                exceptionHandler.handleException(new TelegramApiException("Ошибка при открытии меню", e), telegramBot, chatId);
-            }
-            return "Не удалось открыть меню — попробуй снова! 🚀";
         }
     }
 }
-

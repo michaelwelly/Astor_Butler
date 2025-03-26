@@ -30,7 +30,7 @@ public class TableReservationOrder {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private ReservationStatus status;
+    private TableReservationStatus status;
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;

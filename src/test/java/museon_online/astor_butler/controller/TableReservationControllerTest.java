@@ -1,7 +1,7 @@
 package museon_online.astor_butler.controller;
 
 import museon_online.astor_butler.table.TableReservationController;
-import museon_online.astor_butler.table.ReservationStatus;
+import museon_online.astor_butler.table.TableReservationStatus;
 import museon_online.astor_butler.table.TableReservationOrder;
 import museon_online.astor_butler.table.TableReservationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +51,7 @@ class TableReservationControllerTest {
                 .id(reservationId)
                 .tableNumber("A1")
                 .reservationTime(LocalDateTime.now().plusDays(1))
-                .status(ReservationStatus.PENDING)
+                .status(TableReservationStatus.PENDING)
                 .build();
     }
 
@@ -68,7 +68,7 @@ class TableReservationControllerTest {
 
     @Test
     void confirmReservation_ShouldReturnConfirmedOrder() throws Exception {
-        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservation.setStatus(TableReservationStatus.CONFIRMED);
         when(reservationService.confirmReservation(reservationId)).thenReturn(reservation);
 
         mockMvc.perform(put("/api/reservations/" + reservationId + "/confirm"))
@@ -78,7 +78,7 @@ class TableReservationControllerTest {
 
     @Test
     void cancelReservation_ShouldReturnCanceledOrder() throws Exception {
-        reservation.setStatus(ReservationStatus.CANCELED);
+        reservation.setStatus(TableReservationStatus.CANCELED);
         when(reservationService.cancelReservation(reservationId)).thenReturn(reservation);
 
         mockMvc.perform(put("/api/reservations/" + reservationId + "/cancel"))
@@ -97,7 +97,7 @@ class TableReservationControllerTest {
 
     @Test
     void getReservationsByStatus_ShouldReturnFilteredList() throws Exception {
-        when(reservationService.getReservationsByStatus(ReservationStatus.PENDING)).thenReturn(List.of(reservation));
+        when(reservationService.getReservationsByStatus(TableReservationStatus.PENDING)).thenReturn(List.of(reservation));
 
         mockMvc.perform(get("/api/reservations/status/PENDING"))
                 .andExpect(status().isOk())
@@ -106,7 +106,7 @@ class TableReservationControllerTest {
 
     @Test
     void getReservationsByUserAndStatus_ShouldReturnFilteredList() throws Exception {
-        when(reservationService.getReservationsByUserAndStatus(userId, ReservationStatus.PENDING)).thenReturn(List.of(reservation));
+        when(reservationService.getReservationsByUserAndStatus(userId, TableReservationStatus.PENDING)).thenReturn(List.of(reservation));
 
         mockMvc.perform(get("/api/reservations/user/" + userId + "/status/PENDING"))
                 .andExpect(status().isOk())
