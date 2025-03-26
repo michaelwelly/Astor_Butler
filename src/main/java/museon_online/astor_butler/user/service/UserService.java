@@ -1,6 +1,9 @@
-package museon_online.astor_butler.user;
+package museon_online.astor_butler.user.service;
 
 import lombok.RequiredArgsConstructor;
+import museon_online.astor_butler.user.repository.UserRepository;
+import museon_online.astor_butler.user.model.Role;
+import museon_online.astor_butler.user.model.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

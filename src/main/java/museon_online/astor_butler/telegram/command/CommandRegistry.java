@@ -1,7 +1,7 @@
 package museon_online.astor_butler.telegram.command;
 
-import museon_online.astor_butler.user.User;
-import museon_online.astor_butler.user.UserService;
+import museon_online.astor_butler.user.model.User;
+import museon_online.astor_butler.user.service.UserService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;

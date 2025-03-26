@@ -2,7 +2,7 @@ package museon_online.astor_butler.table;
 
 import jakarta.persistence.*;
 import lombok.*;
-import museon_online.astor_butler.user.User;
+import museon_online.astor_butler.user.model.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

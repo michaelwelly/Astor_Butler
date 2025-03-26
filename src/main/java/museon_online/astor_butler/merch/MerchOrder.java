@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
-import museon_online.astor_butler.user.User;
+import museon_online.astor_butler.user.model.User;
 
 import java.math.BigDecimal;
 import java.util.UUID;

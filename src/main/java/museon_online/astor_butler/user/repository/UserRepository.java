@@ -1,5 +1,6 @@
-package museon_online.astor_butler.user;
+package museon_online.astor_butler.user.repository;
 
+import museon_online.astor_butler.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

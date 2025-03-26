@@ -2,10 +2,10 @@ package museon_online.astor_butler.config;
 
 import lombok.RequiredArgsConstructor;
 import museon_online.astor_butler.telegram.command.MainMenuCommand;
-import museon_online.astor_butler.user.User;
+import museon_online.astor_butler.user.model.User;
 import museon_online.astor_butler.telegram.state.BotState;
 import museon_online.astor_butler.telegram.utils.TelegramBot;
-import museon_online.astor_butler.user.UserService;
+import museon_online.astor_butler.user.service.UserService;
 import museon_online.astor_butler.telegram.utils.TelegramUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;

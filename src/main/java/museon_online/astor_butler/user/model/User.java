@@ -1,4 +1,4 @@
-package museon_online.astor_butler.user;
+package museon_online.astor_butler.user.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -38,6 +38,8 @@ public class User {
     @Column(nullable = false)
     private Role role = Role.ROLE_GUEST;
 
-    private boolean requiresPhone;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status = UserStatus.ACTIVE;
 
 }
