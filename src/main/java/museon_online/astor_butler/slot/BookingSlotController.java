@@ -1,30 +1,37 @@
 package museon_online.astor_butler.slot;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/slot")
+@RequestMapping("/api/booking-slots")
 @RequiredArgsConstructor
 public class BookingSlotController {
 
-    private final BookingSlotService bookingSlotService;
-
-    @GetMapping
-    public List<BookingSlot> getAllSlots() {
-        return bookingSlotService.getAllSlots();
-    }
+    private final BookingSlotService service;
 
     @PostMapping
-    public BookingSlot createSlot(@RequestBody BookingSlot bookingSlot) {
-        return bookingSlotService.createSlot(bookingSlot);
+    public ResponseEntity<BookingSlot> createSlot(@RequestBody BookingSlot slot) {
+        return ResponseEntity.ok(service.create(slot));
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteSlot(@PathVariable UUID id) {
-        bookingSlotService.deleteSlot(id);
+    @GetMapping
+    public ResponseEntity<List<BookingSlot>> getAll() {
+        return ResponseEntity.ok(service.findAll());
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<BookingSlot>> getByStatus(@RequestParam BookingSlotStatus status) {
+        return ResponseEntity.ok(service.findByStatus(status));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<BookingSlot> updateStatus(@PathVariable UUID id,
+                                                    @RequestParam BookingSlotStatus status) {
+        return ResponseEntity.ok(service.updateStatus(id, status));
     }
 }

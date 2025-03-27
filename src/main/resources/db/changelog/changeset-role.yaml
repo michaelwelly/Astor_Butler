@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-roles
+      author: astor
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  type: VARCHAR(20)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+
+        - insert:
+            tableName: roles
+            columns:
+              - column: {name: name, value: ROLE_GUEST}
+              - column: {name: description, value: Гость}
+
+        - insert:
+            tableName: roles
+            columns:
+              - column: {name: name, value: ROLE_MANAGER}
+              - column: {name: description, value: Менеджер}
+
+        - insert:
+            tableName: roles
+            columns:
+              - column: {name: name, value: ROLE_ADMIN}
+              - column: {name: description, value: Администратор}

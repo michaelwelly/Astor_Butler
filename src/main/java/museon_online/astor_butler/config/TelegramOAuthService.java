@@ -2,7 +2,6 @@ package museon_online.astor_butler.config;
 
 import lombok.RequiredArgsConstructor;
 import museon_online.astor_butler.telegram.command.MainMenuCommand;
-import museon_online.astor_butler.user.model.User;
 import museon_online.astor_butler.telegram.state.BotState;
 import museon_online.astor_butler.telegram.utils.TelegramBot;
 import museon_online.astor_butler.user.service.UserService;
@@ -23,9 +22,8 @@ public class TelegramOAuthService {
         String phoneNumber = update.getMessage().getText();
 
         if (isValidPhoneNumber(phoneNumber)) {
-            User user = userService.findByTelegramId(update.getMessage().getFrom().getId().toString());
-            user.setPhoneNumber(phoneNumber);
-            userService.save(user);
+            String telegramId = update.getMessage().getFrom().getId().toString();
+            userService.updatePhoneNumber(telegramId, phoneNumber);
 
             telegramBot.sendTextMessage(chatId, "✅ Номер телефона успешно сохранён!");
             mainMenuCommand.execute(update); // добавлено

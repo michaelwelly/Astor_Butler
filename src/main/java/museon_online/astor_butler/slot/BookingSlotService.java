@@ -1,45 +1,41 @@
 package museon_online.astor_butler.slot;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookingSlotService {
 
     private final BookingSlotRepository bookingSlotRepository;
 
-    public BookingSlot createSlot(BookingSlot bookingSlot) {
-        return bookingSlotRepository.save(bookingSlot);
+    public BookingSlot create(BookingSlot slot) {
+        slot.setStatus(BookingSlotStatus.AVAILABLE);
+        BookingSlot saved = bookingSlotRepository.save(slot);
+        log.info("Создан слот: {}", saved);
+        return saved;
     }
 
-    public BookingSlot getSlotById(UUID id) {
-        return bookingSlotRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Slot not found"));
-    }
-
-    public List<BookingSlot> getAllSlots() {
+    public List<BookingSlot> findAll() {
         return bookingSlotRepository.findAll();
     }
 
-    public List<BookingSlot> getSlotsByDate(LocalDateTime startTime) {
-        return bookingSlotRepository.findByStartTime(startTime);
+    public List<BookingSlot> findByStatus(BookingSlotStatus status) {
+        return bookingSlotRepository.findByStatus(status);
     }
 
-    public BookingSlot updateSlot(UUID id, BookingSlot updatedBookingSlot) {
-        BookingSlot bookingSlot = getSlotById(id);
-        bookingSlot.setStartTime(updatedBookingSlot.getStartTime());
-        bookingSlot.setEndTime(updatedBookingSlot.getEndTime());
-        bookingSlot.setAvailable(updatedBookingSlot.isAvailable());
-        bookingSlot.setOrder(updatedBookingSlot.getOrder());
-        return bookingSlotRepository.save(bookingSlot);
-    }
-
-    public void deleteSlot(UUID id) {
-        bookingSlotRepository.deleteById(id);
+    public BookingSlot updateStatus(UUID id, BookingSlotStatus newStatus) {
+        BookingSlot slot = bookingSlotRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Слот не найден: " + id));
+        slot.setStatus(newStatus);
+        BookingSlot updated = bookingSlotRepository.save(slot);
+        log.info("Статус слота обновлён: {} → {}", id, newStatus);
+        return updated;
     }
 }

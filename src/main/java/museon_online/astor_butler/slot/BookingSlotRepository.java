@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface BookingSlotRepository extends JpaRepository<BookingSlot, UUID> {
     List<BookingSlot> findByStartTime(LocalDateTime startTime);
+    List<BookingSlot> findByStatus(BookingSlotStatus status);
+
 }

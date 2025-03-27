@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-reservation-order
+      author: astor
+      changes:
+        - createTable:
+            tableName: table_reservation_orders
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: table_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reservation_start
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reservation_end
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: table_reservation_orders
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_reservation_user
+        - addForeignKeyConstraint:
+            baseTableName: table_reservation_orders
+            baseColumnNames: table_id
+            referencedTableName: tables
+            referencedColumnNames: id
+            constraintName: fk_reservation_table

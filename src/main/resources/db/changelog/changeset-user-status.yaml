@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user-statuses
+      author: astor
+      changes:
+        - createTable:
+            tableName: user_statuses
+            columns:
+              - column:
+                  name: code
+                  type: VARCHAR(20)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: {name: code, value: ACTIVE}
+              - column: {name: description, value: Активен}
+
+        - insert:
+            tableName: user_statuses
+            columns:
+              - column: {name: code, value: BLOCKED}
+              - column: {name: description, value: Заблокирован}

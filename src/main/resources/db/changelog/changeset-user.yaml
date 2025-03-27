@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users
+      author: astor
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: telegram_id
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: first_name
+                  type: VARCHAR(100)
+              - column:
+                  name: last_name
+                  type: VARCHAR(100)
+              - column:
+                  name: username
+                  type: VARCHAR(100)
+              - column:
+                  name: language_code
+                  type: VARCHAR(10)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(20)
+              - column:
+                  name: status_id
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: status_id
+            referencedTableName: user_statuses
+            referencedColumnNames: code
+            constraintName: fk_user_status
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: role_id
+            referencedTableName: roles
+            referencedColumnNames: name
+            constraintName: fk_user_role

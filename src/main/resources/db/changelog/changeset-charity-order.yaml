@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-charity-order
+      author: astor
+      changes:
+        - createTable:
+            tableName: charity_orders
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: DECIMAL(10,2)
+              - column:
+                  name: message
+                  type: VARCHAR(255)
+        - addForeignKeyConstraint:
+            baseTableName: charity_orders
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_charity_user

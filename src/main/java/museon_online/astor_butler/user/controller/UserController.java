@@ -1,32 +1,62 @@
 package museon_online.astor_butler.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import museon_online.astor_butler.user.repository.UserRepository;
 import museon_online.astor_butler.user.model.User;
+import museon_online.astor_butler.user.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(
+            @RequestParam String firstName,
+            @RequestParam(required = false) String lastName,
+            @RequestParam String telegramId,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String languageCode) {
+        try {
+            userService.registerUser(firstName, lastName, telegramId, username, languageCode);
+            return ResponseEntity.ok("Пользователь успешно зарегистрирован!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+    @PatchMapping("/{telegramId}/phone")
+    public ResponseEntity<String> updatePhoneNumber(
+            @PathVariable String telegramId,
+            @RequestParam String phoneNumber) {
+        try {
+            userService.updatePhoneNumber(telegramId, phoneNumber);
+            return ResponseEntity.ok("Номер телефона обновлён!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable UUID id) {
-        userRepository.deleteById(id);
+    @PostMapping("/save-from-telegram")
+    public ResponseEntity<String> saveUserFromTelegram(@RequestBody org.telegram.telegrambots.meta.api.objects.User telegramUser) {
+        try {
+            userService.saveUser(telegramUser);
+            return ResponseEntity.ok("Пользователь сохранён из Telegram!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{telegramId}")
+    public ResponseEntity<User> findUserByTelegramId(@PathVariable String telegramId) {
+        User user = userService.findUserByTelegramId(telegramId);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 }

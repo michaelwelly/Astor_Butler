@@ -1,86 +1,77 @@
 package museon_online.astor_butler.user.service;
 
 import lombok.RequiredArgsConstructor;
+import museon_online.astor_butler.user.model.UserStatus;
+import museon_online.astor_butler.user.repository.RoleRepository;
 import museon_online.astor_butler.user.repository.UserRepository;
 import museon_online.astor_butler.user.model.Role;
 import museon_online.astor_butler.user.model.User;
-import org.springframework.beans.factory.annotation.Value;
+import museon_online.astor_butler.user.repository.UserStatusRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    @Value("${app.owner.telegram-id}")
-    private String ownerTelegramId;
+    private final RoleRepository roleRepository;
+    private final UserStatusRepository userStatusRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public void registerUser(String firstName, String lastName, String telegramId, String username, String languageCode) {
+        if (userRepository.findByTelegramId(telegramId).isPresent()) {
+            throw new RuntimeException("Пользователь с таким Telegram ID уже существует");
+        }
+
+        Role defaultRole = roleRepository.findById("ROLE_GUEST")
+                .orElseThrow(() -> new IllegalStateException("Роль ROLE_GUEST не найдена"));
+
+        UserStatus defaultStatus = userStatusRepository.findById("ACTIVE")
+                .orElseThrow(() -> new IllegalStateException("Статус ACTIVE не найден"));
+
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setTelegramId(telegramId);
+        user.setUsername(username);
+        user.setLanguageCode(languageCode);
+        user.setRole(defaultRole);
+        user.setStatus(defaultStatus);
+
+        userRepository.save(user);
     }
 
-    public User findByTelegramId(String telegramId) {
-        return userRepository.findByTelegramId(telegramId)
+    public void updatePhoneNumber(String telegramId, String phoneNumber) {
+        User user = userRepository.findByTelegramId(telegramId)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+        user.setPhoneNumber(phoneNumber);
+        userRepository.save(user);
     }
 
-    public User getUserById(UUID id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public void saveUser(org.telegram.telegrambots.meta.api.objects.User telegramUser) {
+        Optional<User> optionalUser = userRepository.findByTelegramId(telegramUser.getId().toString());
+        if (optionalUser.isPresent()) return;
+
+        Role defaultRole = roleRepository.findById("ROLE_GUEST")
+                .orElseThrow(() -> new IllegalStateException("Роль ROLE_GUEST не найдена"));
+
+        UserStatus defaultStatus = userStatusRepository.findById("ACTIVE")
+                .orElseThrow(() -> new IllegalStateException("Статус ACTIVE не найден"));
+
+        User user = new User();
+        user.setTelegramId(String.valueOf(telegramUser.getId()));
+        user.setFirstName(telegramUser.getFirstName());
+        user.setLastName(telegramUser.getLastName());
+        user.setUsername(telegramUser.getUserName());
+        user.setLanguageCode(telegramUser.getLanguageCode());
+        user.setRole(defaultRole);
+        user.setStatus(defaultStatus);
+
+        userRepository.save(user);
     }
 
-    public User assignRole(UUID userId, Role role) {
-        User user = getUserById(userId);
-
-        if (!user.getTelegramId().equals(ownerTelegramId)) {
-            throw new SecurityException("Вы не можете менять роли пользователей");
-        }
-
-        if (role == Role.ROLE_ADMIN) {
-            throw new UnsupportedOperationException("Роль ROLE_ADMIN недоступна для изменения");
-        }
-
-        user.setRole(role);
-        return userRepository.save(user);
-    }
-
-    public User assignManagerRole(UUID userId) {
-        User user = getUserById(userId);
-
-        if (!user.getTelegramId().equals(ownerTelegramId)) {
-            throw new SecurityException("Вы не можете назначить роль менеджера");
-        }
-
-        user.setRole(Role.ROLE_MANAGER);
-        return userRepository.save(user);
-    }
-
-    public User createUser(User user) {
-        if (user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
-            throw new RuntimeException("Phone number is required");
-        }
-
-        user.setRole(Role.ROLE_GUEST);
-        return userRepository.save(user);
-    }
-
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
-    public User updateUser(UUID id, User updatedUser) {
-        User user = getUserById(id);
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        user.setUsername(updatedUser.getUsername());
-        user.setPhoneNumber(updatedUser.getPhoneNumber());
-        return userRepository.save(user);
-    }
-
-    public void deleteUser(UUID id) {
-        userRepository.deleteById(id);
+    public User findUserByTelegramId(String telegramId) {
+        return userRepository.findByTelegramId(telegramId).orElse(null);
     }
 }
