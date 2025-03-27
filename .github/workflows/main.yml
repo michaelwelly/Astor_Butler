@@ -20,7 +20,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: ⚙️ Cache dependencies
+      - name: ⚙️ Cache Maven dependencies
         uses: actions/cache@v3
         with:
           path: ~/.m2
@@ -28,8 +28,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: 🔨 Build with Maven
+      - name: 🔨 Build with Maven (skip tests)
         run: ./mvnw clean install -DskipTests=true
 
       - name: ✅ Run tests
         run: ./mvnw test
+
+      - name: 🐳 Build Docker image
+        run: docker build -t astor-butler:latest .
+
+      - name: 🔐 Login to Docker Hub
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: 📤 Push image to Docker Hub
+        if: github.event_name == 'push'
+        run: |
+          docker tag astor-butler:latest ${{ secrets.DOCKERHUB_USERNAME }}/astor-butler:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/astor-butler:latest
