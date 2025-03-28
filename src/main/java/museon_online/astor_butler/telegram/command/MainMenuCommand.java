@@ -31,7 +31,12 @@ public class MainMenuCommand implements BotCommand {
     }
 
     @Override
-    public String execute(Update update) {
+    public String getDescription() {
+        return "Показать главное меню";
+    }
+
+    @Override
+    public BotResponse execute(Update update) {
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
         List<InlineKeyboardButton> row1 = List.of(
@@ -56,8 +61,7 @@ public class MainMenuCommand implements BotCommand {
 
         markup.setKeyboard(List.of(row1, row2, row3, row4));
 
-        return "Главное меню 👇";
+        return new BotResponse("Главное меню 👇", markup);
     }
 
 }
-

@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-restaurant-table
+      author: astor
+      changes:
+        - createTable:
+            tableName: restaurant_table
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+
+              - column:
+                  name: capacity
+                  type: INT
+
+              - column:
+                  name: type
+                  type: VARCHAR(50)

@@ -22,26 +22,39 @@ public class CommandRegistry {
         for (Object bean : beans.values()) {
             if (bean instanceof BotCommand) {
                 TelegramCommand annotation = bean.getClass().getAnnotation(TelegramCommand.class);
-                commandMap.put(annotation.value(), (BotCommand) bean);
+                if (annotation != null) {
+                    commandMap.put(annotation.value(), (BotCommand) bean);
+                }
             }
+        }
+
+        BotCommand startCommand = commandMap.get("/start");
+        if (startCommand != null) {
+            commandMap.put("start_command", startCommand);
         }
     }
 
-    public String executeCommand(String command, Update update) {
-        User user = userService.findByTelegramId(update.getMessage().getFrom().getId().toString());
+    public BotResponse executeCommand(String command, Update update) {
+        // Получаем Telegram ID
+        String telegramId = update.getMessage().getFrom().getId().toString();
+
+        // Ищем пользователя
+        User user = userService.findUserByTelegramId(telegramId);
         if (user == null) {
-            throw new RuntimeException("Пользователь не найден");
+            return new BotResponse("❌ Пользователь не найден");
         }
 
-        if (user.isRequiresPhone()) {
-            return "🚫 У вас нет доступа к этой команде.";
+        // Проверка на наличие номера телефона
+        if (user.getPhoneNumber() == null || user.getPhoneNumber().isBlank()) {
+            return new BotResponse("🚫 У вас нет доступа к этой команде. Добавьте номер телефона.");
         }
 
+        // Поиск и выполнение команды
         BotCommand botCommand = commandMap.get(command);
         if (botCommand != null) {
             return botCommand.execute(update);
         } else {
-            return "Неизвестная команда 🤷‍♂️";
+            return new BotResponse("🤷‍♂️ Неизвестная команда.");
         }
     }
 }

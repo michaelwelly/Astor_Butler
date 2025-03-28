@@ -4,7 +4,7 @@ databaseChangeLog:
       author: astor
       changes:
         - createTable:
-            tableName: booking_slots
+            tableName: booking_slot
             columns:
               - column:
                   name: id
@@ -12,29 +12,32 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+
               - column:
-                  name: start_time
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: end_time
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: status
-                  type: VARCHAR(20)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: user_id
+                  name: table_id
                   type: UUID
                   constraints:
                     nullable: false
+
+              - column:
+                  name: start_time
+                  type: TIMESTAMP
+
+              - column:
+                  name: end_time
+                  type: TIMESTAMP
+
+              - column:
+                  name: status
+                  type: VARCHAR(32)
+
+              - column:
+                  name: type
+                  type: VARCHAR(32)
+
         - addForeignKeyConstraint:
-            baseTableName: booking_slots
-            baseColumnNames: user_id
-            referencedTableName: users
+            baseTableName: booking_slot
+            baseColumnNames: table_id
+            referencedTableName: restaurant_table
             referencedColumnNames: id
-            constraintName: fk_booking_slot_user
+            constraintName: fk_booking_slot_table

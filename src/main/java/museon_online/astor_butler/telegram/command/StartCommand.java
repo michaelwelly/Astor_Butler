@@ -33,33 +33,35 @@ public class StartCommand implements BotCommand {
     }
 
     @Override
-    public void execute(Update update) {
+    public BotResponse execute(Update update) {
         try {
             InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
-            InlineKeyboardButton loginButton = new InlineKeyboardButton("Войти через Telegram");
-            loginButton.setUrl("https://oauth.telegram.org/auth?bot_id=7663104943&redirect_uri=https://your-app.com/login/oauth2/code/telegram");
+            InlineKeyboardButton startButton = new InlineKeyboardButton("🚀 Начать");
+            startButton.setCallbackData("start_command");
 
-            markup.setKeyboard(List.of(List.of(loginButton)));
+            markup.setKeyboard(List.of(List.of(startButton)));
 
-            Long chatId = getChatIdFromUpdate(update);
-            telegramBot.sendMessageWithMarkup(chatId,
-                    "Привет! Для продолжения авторизуйся через Telegram 👇\n" +
-                    "Если не хочешь авторизовываться — отправляюсь на Луну! 🚀🌕",
-                    markup);
-
+            // побочный вызов основного меню
             mainMenuCommand.execute(update);
+
+            return new BotResponse(
+                "Привет! Для продолжения авторизуйся через Telegram 👇\n" +
+                "Если не хочешь авторизовываться — отправляюсь на Луну! 🚀🌕",
+                markup
+            );
         } catch (Exception e) {
             log.error("Ошибка при выполнении команды /start: {}", e.getMessage(), e);
             Long chatId = getChatIdFromUpdate(update);
             if (chatId != null) {
                 exceptionHandler.handleException(
-                        new TelegramApiException("Ошибка при выполнении команды /start", e),
-                        telegramBot,
-                        chatId
+                    new TelegramApiException("Ошибка при выполнении команды /start", e),
+                    telegramBot,
+                    chatId
                 );
             } else {
                 log.warn("Не удалось определить chatId для отправки сообщения об ошибке.");
             }
+            return new BotResponse("Произошла ошибка при запуске. Попробуйте позже.");
         }
     }
 }

@@ -1,59 +1,48 @@
-package museon_online.astor_butler.auth;
+package museon_online.astor_butler.config;
 
-import lombok.RequiredArgsConstructor;
-import museon_online.astor_butler.telegram.command.MainMenuCommand;
-import museon_online.astor_butler.telegram.state.BotState;
-import museon_online.astor_butler.telegram.utils.TelegramBot;
-import museon_online.astor_butler.user.model.User;
-import museon_online.astor_butler.user.service.UserService;
-import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.springframework.stereotype.Component;
 
-@Service
-@RequiredArgsConstructor
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.MessageDigest;
+import java.util.*;
+
+@Component
 public class TelegramAuthService {
 
-    private final UserService userService;
-    private final TelegramBot telegramBot;
-    private final MainMenuCommand mainMenuCommand;
+    public boolean isValidTelegramUser(String telegramId, String hash, String secretKey) {
+        try {
+            Map<String, String> dataCheck = new HashMap<>();
+            dataCheck.put("id", telegramId);
 
-    public void authorizeOrContinue(Update update) {
-        Message message = update.getMessage();
-        String telegramId = message.getFrom().getId().toString();
-        Long chatId = message.getChatId();
+            List<String> dataStrings = new ArrayList<>();
+            for (Map.Entry<String, String> entry : dataCheck.entrySet()) {
+                dataStrings.add(entry.getKey() + "=" + entry.getValue());
+            }
+            Collections.sort(dataStrings);
+            String dataCheckString = String.join("\n", dataStrings);
 
-        userService.saveUser(message.getFrom());
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] key = digest.digest(secretKey.getBytes());
 
-        User user = userService.findUserByTelegramId(telegramId);
+            Mac sha256HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec keySpec = new SecretKeySpec(key, "HmacSHA256");
+            sha256HMAC.init(keySpec);
 
-        if (user.getPhoneNumber() == null || user.getPhoneNumber().isBlank()) {
-            telegramBot.sendRequestPhoneMessage(chatId);
-            telegramBot.getUserState().put(chatId, BotState.AWAITING_PHONE);
-        } else {
-            telegramBot.sendTextMessage(chatId, "👋 С возвращением, " + user.getFirstName() + "!");
-            mainMenuCommand.execute(update);
-            telegramBot.getUserState().put(chatId, BotState.READY);
+            byte[] hmac = sha256HMAC.doFinal(dataCheckString.getBytes());
+            String hexHash = bytesToHex(hmac);
+
+            return hexHash.equalsIgnoreCase(hash);
+        } catch (Exception e) {
+            return false;
         }
     }
 
-    public void handlePhone(Update update) {
-        Message message = update.getMessage();
-        Long chatId = message.getChatId();
-        String telegramId = message.getFrom().getId().toString();
-        String phone = message.getText();
-
-        if (isValidPhoneNumber(phone)) {
-            userService.updatePhoneNumber(telegramId, phone);
-            telegramBot.sendTextMessage(chatId, "✅ Номер телефона сохранён.");
-            mainMenuCommand.execute(update);
-            telegramBot.getUserState().put(chatId, BotState.READY);
-        } else {
-            telegramBot.sendRequestPhoneMessage(chatId);
+    private String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder(2 * bytes.length);
+        for (byte b : bytes) {
+            hexString.append(String.format("%02x", b));
         }
-    }
-
-    private boolean isValidPhoneNumber(String phone) {
-        return phone != null && phone.matches("^\\+?[0-9]{7,15}$");
+        return hexString.toString();
     }
 }

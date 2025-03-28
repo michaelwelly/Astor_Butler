@@ -1,7 +1,9 @@
-package museon_online.astor_butler.slot;
+package museon_online.astor_butler.feedback;
 
 import jakarta.persistence.*;
 import lombok.*;
+import museon_online.astor_butler.slot.BookingSlot;
+import museon_online.astor_butler.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -12,27 +14,26 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookingSlot {
+public class Feedback {
 
     @Id
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private RestaurantTable table;
+    private User user;
 
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private String text;
 
-    @Enumerated(EnumType.STRING)
-    private BookingSlotStatus status;
+    private LocalDateTime createdAt;
 
-    @Enumerated(EnumType.STRING)
-    private SlotType type; // NEW — тип: стол, бар, танцпол
+    @ManyToOne(fetch = FetchType.LAZY)
+    private BookingSlot slot;
 
     @PrePersist
     public void prePersist() {
         if (id == null) {
             id = UUID.randomUUID();
         }
+        this.createdAt = LocalDateTime.now();
     }
 }
