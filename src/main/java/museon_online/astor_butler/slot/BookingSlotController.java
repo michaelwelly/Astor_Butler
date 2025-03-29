@@ -52,10 +52,7 @@ public class BookingSlotController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime after,
             @RequestParam SlotType type
     ) {
-        Location location = service.getLocationRepository().findById(locationId)
-                .orElseThrow(() -> new IllegalArgumentException("Location not found"));
-
-        return service.findNearestAvailableSlot(location, after, type)
+        return service.findNearestAvailableSlot(locationId, after, type)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

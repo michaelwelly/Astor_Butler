@@ -28,7 +28,7 @@ public class BookingSlotService {
             return;
         }
 
-        List<RestaurantTable> tables = tableRepository.findAllByLocation(location);
+       List<RestaurantTable> tables = tableRepository.findByLocation(location);
 
         List<BookingSlot> newSlots = new ArrayList<>();
         LocalTime start = range.getStart();
