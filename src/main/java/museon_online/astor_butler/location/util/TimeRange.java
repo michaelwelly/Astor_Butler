@@ -1,4 +1,4 @@
-package museon_online.astor_butler.util;
+package museon_online.astor_butler.location.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

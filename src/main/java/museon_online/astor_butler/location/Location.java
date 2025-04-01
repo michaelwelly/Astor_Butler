@@ -2,7 +2,7 @@ package museon_online.astor_butler.location;
 
 import jakarta.persistence.*;
 import lombok.*;
-import museon_online.astor_butler.util.TimeRange;
+import museon_online.astor_butler.location.util.TimeRange;
 
 import java.time.DayOfWeek;
 import java.time.ZoneId;

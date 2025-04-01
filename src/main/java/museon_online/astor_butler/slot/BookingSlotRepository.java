@@ -7,10 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface BookingSlotRepository extends JpaRepository<BookingSlot, Long> {
+public interface BookingSlotRepository extends JpaRepository<BookingSlot, UUID> {
 
     boolean existsByLocationAndTableAndStartTime(Location location, RestaurantTable table, LocalDateTime startTime);
+
+    List<BookingSlot> findAllByLocation(Location location);
+
+    Optional<BookingSlot> findByLocationAndTableAndStartTime(Location location, RestaurantTable table, LocalDateTime startTime);
 
     List<BookingSlot> findAllByLocationAndStatusAndStartTimeBetween(
             Location location,
@@ -25,4 +30,6 @@ public interface BookingSlotRepository extends JpaRepository<BookingSlot, Long> 
             BookingSlotStatus status,
             LocalDateTime after
     );
+
+    List<BookingSlot> findAllByLocationAndStatus(Location location, BookingSlotStatus status);
 }
