@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-event-poster
+      author: michael
+      changes:
+        - createTable:
+            tableName: event_posters
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: date
+                  type: DATE
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: raw_text
+                  type: TEXT
+              - column:
+                  name: source
+                  type: VARCHAR(100)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP

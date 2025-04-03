@@ -15,6 +15,10 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset-menu-pdf.yaml
 
+  # Афиши мероприятий (постеры)
+  - include:
+      file: db/changelog/changeset-event-poster.yaml
+
   # Заказы и бронирование
   - include:
       file: db/changelog/changeset-booking-slot.yaml
