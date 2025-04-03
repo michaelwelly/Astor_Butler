@@ -11,7 +11,11 @@ public class UserSessionManager {
     private final Map<Long, UserSession> sessions = new ConcurrentHashMap<>();
 
     public UserSession getOrCreateSession(Long userId) {
-        return sessions.computeIfAbsent(userId, id -> new UserSession());
+        return sessions.computeIfAbsent(userId, id -> {
+            UserSession session = new UserSession();
+            session.setUserId(id);
+            return session;
+        });
     }
 
     public void clearSession(Long userId) {

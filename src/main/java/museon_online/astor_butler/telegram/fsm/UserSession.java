@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @Data
 public class UserSession {
+    private Long userId;
     private BookingState state = BookingState.SELECTING_LOCATION;
     private UUID locationId;
     private LocalDate date;
