@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-menu-pdf-table
+      author: astor
+      changes:
+        - createTable:
+            tableName: menu_pdf
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_url
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: visible
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
+                  name: order_index
+                  type: INT
+                  defaultValueNumeric: 0
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
