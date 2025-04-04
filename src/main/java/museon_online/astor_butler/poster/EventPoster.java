@@ -33,13 +33,13 @@ public class EventPoster {
     private LocalDateTime createdAt;
 
     public static EventPoster fromDto(EventPosterDto dto) {
-        return new EventPoster(
-                UUID.randomUUID(),
-                dto.getDate(),
-                dto.getTitle(),
-                dto.getRawText(),
-                dto.getSource(),
-                LocalDateTime.now()
-        );
+        EventPoster poster = new EventPoster();
+        poster.setId(UUID.randomUUID());
+        poster.setDate(dto.getDate());
+        poster.setTitle(dto.getTitle());
+        poster.setRawText(dto.getRawText());
+        poster.setSource(dto.getSource());
+        poster.setCreatedAt(LocalDateTime.now());
+        return poster;
     }
 }

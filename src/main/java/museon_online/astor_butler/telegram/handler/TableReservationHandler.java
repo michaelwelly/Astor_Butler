@@ -17,7 +17,7 @@ public class TableReservationHandler {
     private final TelegramBot telegramBot;
     private final TableReservationService tableReservationService;
 
-    public void handleCallback(Update update) {
+    public void handle(Update update) {
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
         telegramBot.sendTextMessage(chatId, "Пожалуйста, выберите стол (в будущем — через интерактивную карту)");
