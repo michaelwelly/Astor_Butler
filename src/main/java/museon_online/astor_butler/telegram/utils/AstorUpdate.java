@@ -27,4 +27,8 @@ public class AstorUpdate {
     public void reply(String message) {
         bot.sendMessage(chatId(), message);
     }
+
+    public static AstorUpdate wrap(Update update, TelegramBot bot) {
+        return new AstorUpdate(update, bot);
+    }
 }

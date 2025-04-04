@@ -29,6 +29,9 @@ public class Feedback {
     @ManyToOne(fetch = FetchType.LAZY)
     private BookingSlot slot;
 
+    @Column(name = "reward_given", nullable = false)
+    private boolean rewardGiven = false;
+
     @PrePersist
     public void prePersist() {
         if (id == null) {

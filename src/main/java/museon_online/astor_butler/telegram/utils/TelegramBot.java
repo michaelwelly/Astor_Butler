@@ -72,7 +72,8 @@ public class TelegramBot extends TelegramLongPollingBot {
             return;
         }
 
-        if (update.hasMessage() && this.feedbackHandler.handle(update)) {
+        if (update.hasMessage()) {
+            this.feedbackHandler.handle(AstorUpdate.wrap(update, this));
             return;
         }
 

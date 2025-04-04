@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tip-session
+      author: astor-butler
+      changes:
+        - createTable:
+            tableName: tip_session
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: telegram_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: state
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: DECIMAL(19, 4)
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false

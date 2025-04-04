@@ -4,23 +4,34 @@ import lombok.RequiredArgsConstructor;
 import museon_online.astor_butler.user.model.User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class FeedbackService {
 
-    private final FeedbackRepository feedbackRepository;
+    private final FeedbackRepository repository;
 
-    public Feedback saveFeedback(User user, String text) {
+    public void saveFeedback(User user, String text) {
         Feedback feedback = Feedback.builder()
                 .user(user)
                 .text(text)
+                .rewardGiven(false)
                 .build();
-        return feedbackRepository.save(feedback);
+        repository.save(feedback);
     }
 
-    public List<Feedback> getFeedbackByUser(User user) {
-        return feedbackRepository.findByUser(user);
+    public boolean hasReceivedReward(UUID userId) {
+        return repository.existsByUserIdAndRewardGivenIsTrue(userId);
+    }
+
+    public void markRewardGiven(UUID userId) {
+        Optional<Feedback> optional = repository.findTopByUserIdOrderByCreatedAtDesc(userId);
+        if (optional.isPresent()) {
+            Feedback feedback = optional.get();
+            feedback.setRewardGiven(true);
+            repository.save(feedback);
+        }
     }
 }

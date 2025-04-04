@@ -31,6 +31,13 @@ databaseChangeLog:
                   name: created_at
                   type: TIMESTAMP
 
+              - column:
+                  name: reward_given
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
         - addForeignKeyConstraint:
             baseTableName: feedback
             baseColumnNames: user_id
