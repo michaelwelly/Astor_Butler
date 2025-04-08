@@ -1,0 +1,215 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20250407-02-insert-reward-policy
+      author: astor-butler
+      changes:
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "FIRST_DONATION"
+              - column:
+                  name: stars
+                  value: "15"
+              - column:
+                  name: repeatable
+                  value: "false"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "FIRST_BOOKING"
+              - column:
+                  name: stars
+                  value: "10"
+              - column:
+                  name: repeatable
+                  value: "false"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "BIRTHDAY"
+              - column:
+                  name: stars
+                  value: "20"
+              - column:
+                  name: repeatable
+                  value: "true"
+              - column:
+                  name: max_per_period
+                  value: "1"
+              - column:
+                  name: period_type
+                  value: "YEARLY"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "FEEDBACK_SUBMITTED"
+              - column:
+                  name: stars
+                  value: "5"
+              - column:
+                  name: repeatable
+                  value: "true"
+              - column:
+                  name: max_per_period
+                  value: "2"
+              - column:
+                  name: period_type
+                  value: "MONTHLY"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "REVIEW_VERIFIED"
+              - column:
+                  name: stars
+                  value: "7"
+              - column:
+                  name: repeatable
+                  value: "true"
+              - column:
+                  name: max_per_period
+                  value: "3"
+              - column:
+                  name: period_type
+                  value: "MONTHLY"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "CHARITY_SUPPORTER"
+              - column:
+                  name: stars
+                  value: "3"
+              - column:
+                  name: repeatable
+                  value: "true"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "SHARE_EVENT"
+              - column:
+                  name: stars
+                  value: "5"
+              - column:
+                  name: repeatable
+                  value: "true"
+              - column:
+                  name: max_per_period
+                  value: "1"
+              - column:
+                  name: period_type
+                  value: "EVENT"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "INVITE_FRIEND"
+              - column:
+                  name: stars
+                  value: "10"
+              - column:
+                  name: repeatable
+                  value: "true"
+              - column:
+                  name: max_per_period
+                  value: "5"
+              - column:
+                  name: period_type
+                  value: "MONTHLY"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "VISITED_PARTNER_PLACE"
+              - column:
+                  name: stars
+                  value: "8"
+              - column:
+                  name: repeatable
+                  value: "true"
+              - column:
+                  name: max_per_period
+                  value: "1"
+              - column:
+                  name: period_type
+                  value: "EVENT"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "JOINED_COMMUNITY"
+              - column:
+                  name: stars
+                  value: "5"
+              - column:
+                  name: repeatable
+                  value: "false"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "VOICE_INTRO_SUBMITTED"
+              - column:
+                  name: stars
+                  value: "4"
+              - column:
+                  name: repeatable
+                  value: "false"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "FAVORITE_PLACE_MARKED"
+              - column:
+                  name: stars
+                  value: "3"
+              - column:
+                  name: repeatable
+                  value: "false"
+
+        - insert:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  value: "DECORATED_PUBLIC_SPACE"
+              - column:
+                  name: stars
+                  value: "25"
+              - column:
+                  name: repeatable
+                  value: "true"
+              - column:
+                  name: max_per_period
+                  value: "2"
+              - column:
+                  name: period_type
+                  value: "SEASONAL"

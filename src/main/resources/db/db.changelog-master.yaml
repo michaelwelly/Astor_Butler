@@ -23,12 +23,6 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset-user-balance.yaml
 
-  # Логи внешних платёжных сессий
-  - include:
-      file: db/changelog/changeset-payment-session.yaml
-  - include:
-      file: db/changelog/changeset-payment-meta.yaml
-
   # Лог транзакций
   - include:
       file: db/changelog/changeset-transaction-log.yaml
@@ -36,6 +30,12 @@ databaseChangeLog:
   # Сессии чаевых (FSM)
   - include:
       file: db/changelog/changeset-tip-session.yaml
+
+  # Награды — политика и наполнение
+  - include:
+      file: db/changelog/changeset-reward-policy-schema.yaml
+  - include:
+      file: db/changelog/changeset-reward-policy-data.yaml
 
   # Заказы и бронирование
   - include:

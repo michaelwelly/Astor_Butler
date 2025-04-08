@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-reward-policy
+      author: astor-butler
+      changes:
+        - createTable:
+            tableName: reward_policy
+            columns:
+              - column:
+                  name: reason
+                  type: VARCHAR(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: stars
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: repeatable
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: max_per_period
+                  type: INT
+              - column:
+                  name: period_type
+                  type: VARCHAR(32)
