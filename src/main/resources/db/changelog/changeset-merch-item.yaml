@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-merch-item-table
+      author: michael.welly
+      changes:
+        - createTable:
+            tableName: merch_item
+            columns:
+              - column:
+                  name: id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: title
+                  type: varchar(255)
+
+              - column:
+                  name: description
+                  type: text
+
+              - column:
+                  name: price_rub
+                  type: decimal(10,2)
+
+              - column:
+                  name: currency
+                  type: varchar(10)
+
+              - column:
+                  name: accept_telegram_stars
+                  type: boolean
+
+              - column:
+                  name: telegram_stars_note
+                  type: varchar(512)
+
+              - column:
+                  name: location
+                  type: varchar(255)
+
+              - column:
+                  name: delivery_options
+                  type: text
+
+              - column:
+                  name: media_url
+                  type: varchar(512)
+
+              - column:
+                  name: media_type
+                  type: varchar(64)
+
+              - column:
+                  name: author_name
+                  type: varchar(255)
+
+              - column:
+                  name: author_is_original
+                  type: boolean
+
+              - column:
+                  name: author_signed
+                  type: boolean
+
+              - column:
+                  name: status
+                  type: varchar(64)
+
+              - column:
+                  name: created_at
+                  type: timestamp

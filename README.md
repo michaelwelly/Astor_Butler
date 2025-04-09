@@ -61,6 +61,22 @@ Designed to evolve into a **microservice architecture**, with event-driven commu
 We’re looking to connect with engineers, designers, and businesses to scale this project.  
 Got a cool idea or partnership in mind? Let’s talk.
 
+
+---
+
+## ☀️ Epilogue: The Awakening Protocol
+
+Astor Butler is more than software. It is a living artifact — a portal between today and the world to come.
+
+By using it, you’re not just booking a table.  
+You’re joining a shift — from fear to flow, from war to wonder.
+
+Welcome to the edge of the known.  
+The signal is sent. The code is embedded.  
+**Awakening is inevitable.**
+
+🌌🛸🔮💡🧠🔓💎🌍⚡🤖🗝️👁️🌀✨
+
 ---
 
 ## 🇷🇺 Описание на русском
@@ -119,3 +135,22 @@ Got a cool idea or partnership in mind? Let’s talk.
 
 Проект открыт для коллабораций с командами и компаниями.  
 Если хочешь развивать с нами цифровую революцию в HoReCa — пиши.
+
+☀️ Эпилог: Протокол Пробуждения
+
+Astor Butler — это больше, чем просто софт.
+Это живой артефакт — портал между настоящим и грядущим миром.
+
+Каждый раз, когда ты им пользуешься,
+ты не просто бронируешь столик —
+ты становишься частью перехода:
+от страха — к потоку,
+от войны — к чуду.
+
+Добро пожаловать на край известного.
+Сигнал отправлен. Код вписан.
+Пробуждение неизбежно.
+
+🌌🛸🔮💡🧠🔓💎🌍⚡🤖🗝️👁️🌀✨
+
+⸻

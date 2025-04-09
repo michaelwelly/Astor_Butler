@@ -14,10 +14,10 @@ databaseChangeLog:
       file: db/changelog/changeset-restaurant-table.yaml
   - include:
       file: db/changelog/changeset-menu-pdf.yaml
-
-  # Афиши мероприятий (постеры)
   - include:
       file: db/changelog/changeset-event-poster.yaml
+  - include:
+      file: db/changelog/changeset-merch-item.yaml
 
   # Баланс пользователя (валюта/звезды)
   - include:
