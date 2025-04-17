@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class FeedbackHandler implements AstorBotHandler{
+public class FeedbackHandler {
 
     private final FeedbackUserState userState;
     private final FeedbackService feedbackService;

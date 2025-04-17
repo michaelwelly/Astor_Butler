@@ -8,7 +8,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class AstorUpdate {
 
     private final Update update;
-    private final TelegramBot bot;
 
     public String text() {
         Message msg = update.getMessage();
@@ -16,19 +15,17 @@ public class AstorUpdate {
     }
 
     public Long chatId() {
-        Message msg = update.getMessage();
-        return msg != null ? msg.getChatId() : null;
+        if (update.getMessage() != null) {
+            return update.getMessage().getChatId();
+        } else if (update.getCallbackQuery() != null && update.getCallbackQuery().getMessage() != null) {
+            return update.getCallbackQuery().getMessage().getChatId();
+        } else if (update.getEditedMessage() != null) {
+            return update.getEditedMessage().getChatId();
+        }
+        return null;
     }
 
     public Update raw() {
         return update;
-    }
-
-    public void reply(String message) {
-        bot.sendMessage(chatId(), message);
-    }
-
-    public static AstorUpdate wrap(Update update, TelegramBot bot) {
-        return new AstorUpdate(update, bot);
     }
 }

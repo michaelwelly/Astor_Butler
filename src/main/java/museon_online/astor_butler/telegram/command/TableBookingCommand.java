@@ -1,10 +1,10 @@
 package museon_online.astor_butler.telegram.command;
 
 import lombok.RequiredArgsConstructor;
-import museon_online.astor_butler.telegram.fsm.BookingHandler;
-import museon_online.astor_butler.telegram.fsm.UserSession;
-import museon_online.astor_butler.telegram.fsm.UserSessionManager;
-import museon_online.astor_butler.telegram.fsm.BookingState;
+import museon_online.astor_butler.fsm.BookingHandler;
+import museon_online.astor_butler.fsm.UserSession;
+import museon_online.astor_butler.fsm.UserSessionManager;
+import museon_online.astor_butler.fsm.BookingState;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

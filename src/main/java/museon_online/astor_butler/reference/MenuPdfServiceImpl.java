@@ -1,4 +1,4 @@
-package museon_online.astor_butler.reference.service;
+package museon_online.astor_butler.reference;
 
 import museon_online.astor_butler.reference.MenuCategory;
 import museon_online.astor_butler.reference.MenuPdf;

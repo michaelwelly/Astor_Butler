@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TipHandler implements AstorBotHandler {
+public class TipHandler {
 
     private final TipUserStateService tipStateService;
     private final BalanceService balanceService;

@@ -1,16 +1,18 @@
 package museon_online.astor_butler.telegram.utils;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
-import museon_online.astor_butler.config.TelegramAuthService;
+import museon_online.astor_butler.telegram.TelegramRouter;
 import museon_online.astor_butler.telegram.command.BotResponse;
-import museon_online.astor_butler.telegram.handler.FeedbackHandler;
+import museon_online.astor_butler.telegram.context.CommandContext;
+import museon_online.astor_butler.telegram.context.CommandContextBuilder;
 import museon_online.astor_butler.telegram.state.BotState;
 import museon_online.astor_butler.telegram.command.CommandRegistry;
 import museon_online.astor_butler.telegram.exception.TelegramExceptionHandler;
+import museon_online.astor_butler.user.service.UserGateService;
 import museon_online.astor_butler.user.service.UserService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -23,31 +25,16 @@ import java.util.Map;
 
 @Slf4j
 @Component
-@SuppressWarnings("deprecation")
+@RequiredArgsConstructor
 @Getter
 public class TelegramBot extends TelegramLongPollingBot {
 
-    private final CommandRegistry commandRegistry;
+    private final UserGateService userGateService;
+    private final CommandContextBuilder contextBuilder;
+    private final TelegramRouter telegramRouter;
     private final TelegramExceptionHandler exceptionHandler;
-    private final String botToken;
     private final Map<Long, BotState> userState = new HashMap<>();
-    private final TelegramAuthService telegramAuthService;
-    private final UserService userService;
-    private final FeedbackHandler feedbackHandler;
-
-    public TelegramBot(CommandRegistry commandRegistry,
-                       TelegramExceptionHandler exceptionHandler,
-                       TelegramAuthService telegramAuthService,
-                       UserService userService,
-                       FeedbackHandler feedbackHandler,
-                       @Value("${telegram.bot.token}") String botToken) {
-        this.commandRegistry = commandRegistry;
-        this.exceptionHandler = exceptionHandler;
-        this.telegramAuthService = telegramAuthService;
-        this.userService = userService;
-        this.feedbackHandler = feedbackHandler;
-        this.botToken = botToken;
-    }
+    private final TelegramBotProperties botProperties;
 
     @PostConstruct
     public void init() {
@@ -61,7 +48,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return botToken;
+        return botProperties.getToken();
     }
 
     @Override
@@ -72,36 +59,29 @@ public class TelegramBot extends TelegramLongPollingBot {
             return;
         }
 
-        if (update.hasMessage()) {
-            this.feedbackHandler.handle(AstorUpdate.wrap(update, this));
+        if (!userGateService.isAuthorized(update)) {
+            sendMessage(chatId, "⛔ Вы не прошли авторизацию через Telegram.");
             return;
         }
 
-        try {
-            if (update.hasMessage() && update.getMessage().hasText()) {
-                org.telegram.telegrambots.meta.api.objects.User telegramUser = update.getMessage().getFrom();
-                String telegramId = telegramUser.getId().toString();
-                String hash = TelegramUtils.extractHash(update); // нужно реализовать этот метод отдельно
-                if (!telegramAuthService.isValidTelegramUser(telegramId, hash, botToken)) {
-                    sendMessage(update.getMessage().getChatId(), "⚠️ Ошибка авторизации через Telegram.");
-                    return;
-                }
-                userService.saveUser(telegramUser);
+        userGateService.loadOrCreateUser(update);
 
-                if (update.hasCallbackQuery()) {
-                    handleCallback(update);
+        try {
+            AstorUpdate astorUpdate = new AstorUpdate(update);
+            CommandContext context = contextBuilder.build(astorUpdate);
+            BotResponse response = telegramRouter.route(update);
+
+            if (response != null) {
+                if (response.hasMarkup()) {
+                    sendMessageWithMarkup(chatId, response.getText(), response.getMarkup());
                 } else {
-                    handleCommand(update);
+                    sendMessage(chatId, response.getText());
                 }
-            } else {
-                log.debug("Игнорируемое обновление: {}", update);
             }
         } catch (Exception e) {
             log.error("Ошибка в обработке команды: {}", e.getMessage(), e);
             if (chatId != null) {
                 exceptionHandler.handleException(new TelegramApiException("Ошибка в обработке команды", e), this, chatId);
-            } else {
-                log.warn("Не удалось определить chatId для отправки сообщения об ошибке.");
             }
         }
     }

@@ -1,4 +1,4 @@
-package museon_online.astor_butler.telegram.fsm;
+package museon_online.astor_butler.fsm;
 
 import org.springframework.stereotype.Component;
 

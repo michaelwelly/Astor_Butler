@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class AfishaHandler implements AstorBotHandler {
+public class AfishaHandler {
 
     private final PosterParserService posterParserService;
     private final PosterService posterService;

@@ -1,4 +1,4 @@
-package museon_online.astor_butler.config;
+package museon_online.astor_butler.user;
 
 import org.springframework.stereotype.Component;
 
