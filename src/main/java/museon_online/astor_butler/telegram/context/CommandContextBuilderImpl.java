@@ -16,18 +16,14 @@ public class CommandContextBuilderImpl implements CommandContextBuilder {
             throw new IllegalStateException("Недостаточно данных для построения CommandContext");
         }
 
-        String platform = "TELEGRAM"; // может быть определено динамически позже
-        String locale = "ru";         // временно зафиксировано, можно брать из update.getFrom().getLanguageCode()
-        String aiIntent = null;       // зарезервировано для AI-интеграции
-
-        return new CommandContext(
-                command,
-                userId,
-                chatId,
-                platform,
-                locale,
-                aiIntent,
-                update.raw()
-        );
+        return CommandContext.builder()
+                .command(command)
+                .telegramUserId(userId)
+                .chatId(chatId)
+                .platform("TELEGRAM")
+                .locale("ru")
+                .aiIntent(null)
+                .rawUpdate(update.raw())
+                .build();
     }
 }

@@ -27,3 +27,7 @@ spring:
   liquibase:
       change-log: ${LIQUIBASE_CHANGELOG}
       enabled: true
+
+deepseek:
+  api:
+    key: ${DEEPSEEK_API_KEY}
