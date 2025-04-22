@@ -20,7 +20,7 @@ Astor Butler is an intelligent assistant designed for HoReCa businesses (restaur
 
 ## 🔧 Tech Stack
 
-- Java 21, Spring Boot
+- Java 17, Spring Boot
 - PostgreSQL, Redis
 - Docker, docker-compose
 - Kafka, Grafana, Prometheus
