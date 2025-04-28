@@ -1,4 +1,4 @@
-package museon_online.astor_butler.telegram.command;
+package museon_online.astor_butler.telegram.utils;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
 

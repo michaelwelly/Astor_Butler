@@ -2,7 +2,7 @@ package museon_online.astor_butler.fsm.core;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import museon_online.astor_butler.telegram.command.BotResponse;
+import museon_online.astor_butler.telegram.utils.BotResponse;
 import museon_online.astor_butler.telegram.context.CommandContext;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +18,10 @@ public class FSMRouter {
 
     /**
      * Основной метод FSMRouter. Обрабатывает входящий контекст и направляет его
-     * соответствующему FSM-хендлеру в зависимости от текущего состояния пользователя.
+     * соответствующему FSM-обработчику в зависимости от текущего состояния пользователя.
      *
      * @param context входящий контекст команды
-     * @return ответ бота, сформированный соответствующим FSM-хендлером
+     * @return ответ бота, сформированный соответствующим FSM-обработчиком
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public BotResponse route(CommandContext context) {

@@ -2,10 +2,10 @@ package museon_online.astor_butler.telegram.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import museon_online.astor_butler.telegram.utils.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Slf4j
-@TelegramCommand("/balance")
 @RequiredArgsConstructor
 public class BalanceCommand implements BotCommand {
 

@@ -1,6 +1,6 @@
 package museon_online.astor_butler.central;
 
-import museon_online.astor_butler.telegram.command.BotResponse;
+import museon_online.astor_butler.telegram.utils.BotResponse;
 import museon_online.astor_butler.telegram.context.CommandContext;
 
 public interface DomainRouter {

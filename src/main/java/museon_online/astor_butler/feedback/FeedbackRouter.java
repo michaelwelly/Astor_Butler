@@ -2,7 +2,7 @@
 package museon_online.astor_butler.feedback;
 
 import museon_online.astor_butler.central.DomainRouter;
-import museon_online.astor_butler.telegram.command.BotResponse;
+import museon_online.astor_butler.telegram.utils.BotResponse;
 import museon_online.astor_butler.telegram.context.CommandContext;
 import org.springframework.stereotype.Component;
 

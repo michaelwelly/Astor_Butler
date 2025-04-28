@@ -5,13 +5,11 @@ import museon_online.astor_butler.fsm.BookingHandler;
 import museon_online.astor_butler.fsm.UserSession;
 import museon_online.astor_butler.fsm.UserSessionManager;
 import museon_online.astor_butler.fsm.BookingState;
+import museon_online.astor_butler.telegram.utils.BotCommand;
+import museon_online.astor_butler.telegram.utils.BotResponse;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@TelegramCommand(
-        value = "/table",
-        description = "Забронировать столик в заведении"
-)
 @Component
 @RequiredArgsConstructor
 public class TableBookingCommand implements BotCommand {

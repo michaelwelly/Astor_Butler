@@ -3,7 +3,7 @@ package museon_online.astor_butler.central;
 import java.util.List;
 
 import museon_online.astor_butler.fsm.core.FSMRouter;
-import museon_online.astor_butler.telegram.command.BotResponse;
+import museon_online.astor_butler.telegram.utils.BotResponse;
 import museon_online.astor_butler.telegram.context.CommandContext;
 import org.springframework.stereotype.Component;
 

@@ -4,7 +4,7 @@ import museon_online.astor_butler.telegram.context.CommandContext;
 import museon_online.astor_butler.telegram.context.CommandContextBuilder;
 
 import museon_online.astor_butler.telegram.utils.AstorUpdate;
-import museon_online.astor_butler.telegram.command.BotResponse;
+import museon_online.astor_butler.telegram.utils.BotResponse;
 import museon_online.astor_butler.central.CentralRouter;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -24,7 +24,7 @@ public class TelegramRouter {
         // Оборачиваем Update в наш удобный DTO
         AstorUpdate astorUpdate = new AstorUpdate(update);
 
-        // Собираем контекст с пользователем, источником и мета-инфой
+        // Собираем контекст с пользователем, источником и мета-информацией
         CommandContext context = contextBuilder.build(astorUpdate);
 
         // Достаём команду из текста или callback

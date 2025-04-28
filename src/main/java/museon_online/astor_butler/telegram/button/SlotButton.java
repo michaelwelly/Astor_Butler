@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class FeedbackButton implements Button {
+public class SlotButton implements Button {
 
     @Override
     public InlineKeyboardMarkup buildButton() {
         InlineKeyboardButton button = new InlineKeyboardButton();
-        button.setText("✍️ Отзыв");
-        button.setCallbackData("/feedback");
+        button.setText("🎯 Свободные слоты");
+        button.setCallbackData("/slots");
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(List.of(List.of(button)));
@@ -23,11 +23,11 @@ public class FeedbackButton implements Button {
 
     @Override
     public String getCommand() {
-        return "/feedback";
+        return "/slots";
     }
 
     @Override
     public String getDescription() {
-        return "Оставить отзыв о заведении";
+        return "Посмотреть доступные слоты бронирования";
     }
 }

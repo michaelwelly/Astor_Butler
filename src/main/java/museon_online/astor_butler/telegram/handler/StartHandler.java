@@ -2,7 +2,7 @@ package museon_online.astor_butler.telegram.handler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import museon_online.astor_butler.telegram.command.BotResponse;
+import museon_online.astor_butler.telegram.utils.BotResponse;
 import museon_online.astor_butler.telegram.command.StartCommand;
 import museon_online.astor_butler.telegram.command.MainMenuCommand;
 import museon_online.astor_butler.telegram.utils.AstorUpdate;

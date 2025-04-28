@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class FeedbackButton implements Button {
+public class CharityButton implements Button {
 
     @Override
     public InlineKeyboardMarkup buildButton() {
         InlineKeyboardButton button = new InlineKeyboardButton();
-        button.setText("✍️ Отзыв");
-        button.setCallbackData("/feedback");
+        button.setText("❤️ Благотворительность");
+        button.setCallbackData("/charity");
 
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
         markup.setKeyboard(List.of(List.of(button)));
@@ -23,11 +23,11 @@ public class FeedbackButton implements Button {
 
     @Override
     public String getCommand() {
-        return "/feedback";
+        return "/charity";
     }
 
     @Override
     public String getDescription() {
-        return "Оставить отзыв о заведении";
+        return "Поддержать благотворительный проект";
     }
 }
