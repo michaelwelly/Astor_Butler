@@ -3,6 +3,7 @@ package museon_online.astor_butler.telegram.command;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import museon_online.astor_butler.telegram.button.*;
+import museon_online.astor_butler.telegram.utils.BotButton;
 import museon_online.astor_butler.telegram.utils.BotCommand;
 import museon_online.astor_butler.telegram.utils.BotResponse;
 import org.springframework.stereotype.Component;
@@ -42,41 +43,26 @@ public class MainMenuCommand implements BotCommand {
 
     @Override
     public BotResponse execute(Update update) {
-        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        try {
+            InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+            markup.setKeyboard(List.of(
+                    List.of(buildButton(menuButton), buildButton(balanceButton)),
+                    List.of(buildButton(slotButton), buildButton(tableReservationButton)),
+                    List.of(buildButton(merchButton), buildButton(razjebButton)),
+                    List.of(buildButton(posterButton), buildButton(feedbackButton)),
+                    List.of(buildButton(tipButton), buildButton(charityButton)),
+                    List.of(buildButton(contactButton), buildButton(cancelButton))
+            ));
 
-        List<InlineKeyboardButton> row1 = List.of(
-                menuButton.buildButton().getKeyboard().get(0).get(0),
-                balanceButton.buildButton().getKeyboard().get(0).get(0)
-        );
+            return new BotResponse("Главное меню 👇", markup);
 
-        List<InlineKeyboardButton> row2 = List.of(
-                slotButton.buildButton().getKeyboard().get(0).get(0),
-                tableReservationButton.buildButton().getKeyboard().get(0).get(0)
-        );
+        } catch (Exception e) {
+            log.error("Ошибка при построении главного меню", e);
+            return new BotResponse("Произошла ошибка при открытии главного меню. Пожалуйста, попробуйте позже.");
+        }
+    }
 
-        List<InlineKeyboardButton> row3 = List.of(
-                merchButton.buildButton().getKeyboard().get(0).get(0),
-                razjebButton.buildButton().getKeyboard().get(0).get(0)
-        );
-
-        List<InlineKeyboardButton> row4 = List.of(
-                posterButton.buildButton().getKeyboard().get(0).get(0),
-                feedbackButton.buildButton().getKeyboard().get(0).get(0)
-
-        );
-
-        List<InlineKeyboardButton> row5 = List.of(
-                tipButton.buildButton().getKeyboard().get(0).get(0),
-                charityButton.buildButton().getKeyboard().get(0).get(0)
-        );
-
-        List<InlineKeyboardButton> row6 = List.of(
-                contactButton.buildButton().getKeyboard().get(0).get(0),
-                cancelButton.buildButton().getKeyboard().get(0).get(0)
-        );
-
-        markup.setKeyboard(List.of(row1, row2, row3, row4, row5, row6));
-
-        return new BotResponse("Главное меню 👇", markup);
+    private InlineKeyboardButton buildButton(Object button) {
+        return ((BotButton) button).buildButton().getKeyboard().get(0).get(0);
     }
 }

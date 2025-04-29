@@ -1,6 +1,6 @@
 package museon_online.astor_butler.telegram.button;
 
-import museon_online.astor_butler.telegram.utils.Button;
+import museon_online.astor_butler.telegram.utils.BotButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.springframework.stereotype.Component;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ContactButton implements Button {
+public class ContactButton implements BotButton {
 
     @Override
     public InlineKeyboardMarkup buildButton() {
